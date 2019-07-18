@@ -1,0 +1,17 @@
+service: probot-home-assistant
+
+custom: ${file(config.yml)}
+
+provider:
+  name: aws
+  stage: ${opt:stage, 'dev'}
+  runtime: nodejs10.x
+
+functions:
+  handleProbot:
+    handler: dist/serverless_handler.probot
+    events:
+      - http: POST github_probot_webhook
+    environment:
+      APP_ID: ${self:custom.${self:provider.stage}.github_app_id}
+      WEBHOOK_SECRET: ${self:custom.${self:provider.stage}.github_app_webhook_secret}

@@ -1,0 +1,3 @@
+prod:
+  github_app_id: "12345"
+  github_app_webhook_secret: "abcdef"

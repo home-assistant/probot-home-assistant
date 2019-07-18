@@ -1,0 +1,41 @@
+{
+  "name": "probot-home-assistant",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/app.js",
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "watch": "tsc --watch",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "npm run build && sls deploy --stage prod"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "husky": "^3.0.1",
+    "prettier": "^1.18.2",
+    "serverless": "^1.48.0",
+    "typescript": "^3.5.3"
+  },
+  "dependencies": {
+    "@probot/serverless-lambda": "^0.3.0",
+    "probot": "^9.2.19"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "linters": {
+      "*.ts": [
+        "prettier --write",
+        "git add"
+      ]
+    }
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "arrowParens": "always"
+  }
+}
