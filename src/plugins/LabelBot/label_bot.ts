@@ -49,6 +49,8 @@ export const runLabelBotPlugin = async (context: PRContext) => {
   );
 
   await context.github.issues.addLabels(
+    // Bug in Probot: https://github.com/probot/probot/issues/917
+    // @ts-ignore
     context.issue({
       labels,
     })
