@@ -34,7 +34,10 @@
     }
   },
   "lint-staged": {
-    "*.ts": "prettier --write"
+    "*.ts": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "prettier": {
     "trailingComma": "es5",
