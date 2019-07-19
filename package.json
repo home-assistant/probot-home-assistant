@@ -6,15 +6,22 @@
   "scripts": {
     "build": "rm -rf dist && tsc",
     "watch": "tsc --watch",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "npm run build && sls deploy --stage prod"
+    "deploy": "npm run build && sls deploy --stage prod",
+    "logs": "sls logs --stage prod -f handleProbot --tail",
+    "test": "ts-mocha",
+    "test-watch": "ts-mocha --watch"
   },
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^12.6.8",
     "husky": "^3.0.1",
+    "lint-staged": "^9.2.0",
+    "mocha": "^6.2.0",
     "prettier": "^1.18.2",
     "serverless": "^1.48.0",
+    "ts-mocha": "^6.0.0",
     "typescript": "^3.5.3"
   },
   "dependencies": {
@@ -27,12 +34,7 @@
     }
   },
   "lint-staged": {
-    "linters": {
-      "*.ts": [
-        "prettier --write",
-        "git add"
-      ]
-    }
+    "*.ts": "prettier --write"
   },
   "prettier": {
     "trailingComma": "es5",
