@@ -4,6 +4,8 @@ custom: ${file(config.yml)}
 
 provider:
   name: aws
+  region: us-east-1
+  timeout: 10
   stage: ${opt:stage, 'dev'}
   runtime: nodejs10.x
 

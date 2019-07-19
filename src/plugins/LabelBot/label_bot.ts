@@ -22,7 +22,7 @@ const STRATEGIES = [
   hasTests,
 ];
 
-export const LabelBotPlugin = async (context: PRContext) => {
+export const runLabelBotPlugin = async (context: PRContext) => {
   const files = await getPullRequestFilesFromContext(context);
   const parsed = files.map((file) => new ParsedPath(file));
   const labelSet = new Set();
@@ -36,11 +36,17 @@ export const LabelBotPlugin = async (context: PRContext) => {
   const labels = Array.from(labelSet);
 
   if (labels.length === 0 || labels.length > 9) {
-    console.debug(
-      `Not setting ${labels.length} labels because out of range of what we allow`
+    context.log(
+      `LabelBot: Not setting ${labels.length} labels because out of range of what we allow`
     );
     return;
   }
+
+  context.log(
+    `LabelBot: Setting labels on PR ${
+      context.payload.pull_request.number
+    }: ${labels.join(", ")}`
+  );
 
   await context.github.issues.addLabels(
     context.issue({

@@ -1,12 +1,12 @@
 import * as assert from "assert";
-import { LabelBotPlugin } from "../../../src/plugins/LabelBot/label_bot";
+import { runLabelBotPlugin } from "../../../src/plugins/LabelBot/label_bot";
 import { ParsedPath } from "../../../src/util/parse_path";
 
 describe("LabelBotPlugin", () => {
   it("works", async () => {
     let setLabels: any;
 
-    await LabelBotPlugin({
+    await runLabelBotPlugin({
       payload: {
         pull_request: {
           // @ts-ignore
