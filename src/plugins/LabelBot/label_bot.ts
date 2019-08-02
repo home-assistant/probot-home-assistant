@@ -23,13 +23,13 @@ const STRATEGIES = [
   hasTests,
 ];
 
-export const initLabelBotPlugin = (app: Application) => {
+export const initLabelBot = (app: Application) => {
   app.on("pull_request.opened", async (context: PRContext) => {
     if (context.isBot) {
       context.log("Not doing action for a bot");
       return;
     }
-    await runLabelBotPlugin(context);
+    await runLabelBot(context);
   });
 
   // app.on("issues.edited", async (context: PRContext) => {
@@ -38,7 +38,7 @@ export const initLabelBotPlugin = (app: Application) => {
   // });
 };
 
-export const runLabelBotPlugin = async (context: PRContext) => {
+export const runLabelBot = async (context: PRContext) => {
   const files = await getPullRequestFilesFromContext(context);
   const parsed = files.map((file) => new ParsedPath(file));
   const labelSet = new Set();
