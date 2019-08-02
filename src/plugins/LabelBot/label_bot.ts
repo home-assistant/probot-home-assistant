@@ -11,6 +11,7 @@ import markCore from "./strategies/markCore";
 import smallPR from "./strategies/smallPR";
 import hasTests from "./strategies/hasTests";
 import { PRContext } from "../../types";
+import { Application } from "probot";
 
 const STRATEGIES = [
   componentAndPlatform,
@@ -21,6 +22,21 @@ const STRATEGIES = [
   smallPR,
   hasTests,
 ];
+
+export const initLabelBotPlugin = (app: Application) => {
+  app.on("pull_request.opened", async (context: PRContext) => {
+    if (context.isBot) {
+      context.log("Not doing action for a bot");
+      return;
+    }
+    await runLabelBotPlugin(context);
+  });
+
+  // app.on("issues.edited", async (context: PRContext) => {
+  //   // This is also for PRs
+  //   // context.log("Edited", context.event);
+  // });
+};
 
 export const runLabelBotPlugin = async (context: PRContext) => {
   const files = await getPullRequestFilesFromContext(context);
