@@ -11,6 +11,7 @@ import markCore from "./strategies/markCore";
 import smallPR from "./strategies/smallPR";
 import hasTests from "./strategies/hasTests";
 import { PRContext } from "../../types";
+import { Application } from "probot";
 
 const STRATEGIES = [
   componentAndPlatform,
@@ -22,7 +23,22 @@ const STRATEGIES = [
   hasTests,
 ];
 
-export const runLabelBotPlugin = async (context: PRContext) => {
+export const initLabelBot = (app: Application) => {
+  app.on("pull_request.opened", async (context: PRContext) => {
+    if (context.isBot) {
+      context.log("Not doing action for a bot");
+      return;
+    }
+    await runLabelBot(context);
+  });
+
+  // app.on("issues.edited", async (context: PRContext) => {
+  //   // This is also for PRs
+  //   // context.log("Edited", context.event);
+  // });
+};
+
+export const runLabelBot = async (context: PRContext) => {
   const files = await getPullRequestFilesFromContext(context);
   const parsed = files.map((file) => new ParsedPath(file));
   const labelSet = new Set();
