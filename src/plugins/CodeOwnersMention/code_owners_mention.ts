@@ -80,16 +80,21 @@ export const initCodeOwnersMention = (app) => {
         rawUsername.substring(1)
       );
 
-      await context.github.issues.addAssignees(
-        context.issue({ assignees: newAssignees })
-      );
+      const promises: Promise<unknown>[] = [
+        context.github.issues.addAssignees(
+          context.issue({ assignees: newAssignees })
+        ),
+      ];
 
-      if (mentions.length === 0) {
-        return;
+      if (mentions.length > 0) {
+        promises.push(
+          context.github.issues.createComment(
+            context.issue({ body: commentBody })
+          )
+        );
       }
 
-      const issueComment = context.issue({ body: commentBody });
-      return context.github.issues.createComment(issueComment);
+      await Promise.all(promises);
     }
   );
 };
