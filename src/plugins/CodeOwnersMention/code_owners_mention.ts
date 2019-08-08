@@ -26,7 +26,7 @@ export const initCodeOwnersMention = (app) => {
 
       if (str.indexOf(integrationName) === -1) {
         context.log(
-          `Integration named ${integrationName} not in CODEOWNERS, exiting during processing of ${triggerURL}`
+          `Integration ${integrationName} not in CODEOWNERS, exiting during processing of ${triggerURL}`
         );
         return;
       }
