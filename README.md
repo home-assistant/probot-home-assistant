@@ -10,3 +10,22 @@
 - Deploy this repo with `yarn deploy` and get a HTTP url
 - Update GitHub app to set HTTP url to the deployed url
 - Install the GitHub app
+
+## Permissions
+
+- Issues: Read & write
+- Pull requests: Read & write
+- Single file: Read-only, `CODEOWNERS`
+- Commit statuses: Read & Write
+- Organizaiton memebers: Read only
+
+## Subscribe to events
+
+- Issue comment
+- Issues
+- Label
+- Milestone
+- Pull request review
+- Pull request
+- Pull request review comment
+- Status
