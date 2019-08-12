@@ -1,20 +1,11 @@
 import { PRContext } from "../../types";
 import { Application } from "probot";
-import {
-  filterEventByRepo,
-  extractRepoFromContext,
-} from "../../util/filter_event_repo";
-import {
-  REPO_HOME_ASSISTANT,
-  REPO_HOME_ASSISTANT_IO,
-  ORG_HASS,
-} from "../../const";
-import { filterEventNoBot } from "../../util/filter_event_no_bot";
+import { extractRepoFromContext } from "../../util/filter_event_repo";
+import { REPO_HOME_ASSISTANT_IO, ORG_HASS } from "../../const";
 import { getIssueFromPayload } from "../../util/issue";
 import { extractIssuesOrPullRequestLinksFromMarkdown } from "../../util/pull_request";
 
 const NAME = "DocsParenting";
-const EVENTS = ["pull_request.opened", "pull_request.edited"];
 
 export const initDocsParenting = (app: Application) => {
   app.on(["pull_request.opened", "pull_request.edited"], async (context) => {
