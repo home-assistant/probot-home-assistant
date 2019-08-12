@@ -1,3 +1,6 @@
+export const REPOSITORY_HOME_ASSISTANT = "home-assistant";
+export const REPOSITORY_HOME_ASSISTANT_IO = "home-assistant.io";
+
 export const entityComponents = [
   "air_quality",
   "alarm_control_panel",
