@@ -1,6 +1,23 @@
 import { Context } from "probot";
 import { PayloadRepository } from "@octokit/webhooks";
 
+export const extractRepoFromContext = (
+  context: Context<any>
+): string | undefined => {
+  let repo: string | undefined;
+  const anyContext = context as any;
+
+  // PayloadWithRepository events
+  if (anyContext.payload && anyContext.payload.repository) {
+    repo = (anyContext.payload.repository as PayloadRepository).name;
+    // The other events
+  } else if (anyContext.repository) {
+    const fullRepo = anyContext.repository;
+    repo = fullRepo.substr(fullRepo.indexOf("/") + 1);
+  }
+  return repo;
+};
+
 export const filterEventByRepo = <T>(
   name: string,
   filterRepository: string,
@@ -8,17 +25,7 @@ export const filterEventByRepo = <T>(
 ): ((context: Context<T>) => Promise<void>) => {
   // Wrapped handler function
   return async (context: Context<T>) => {
-    let repo: string | undefined;
-    const anyContext = context as any;
-
-    // PayloadWithRepository events
-    if (anyContext.payload && anyContext.payload.repository) {
-      repo = (anyContext.payload.repository as PayloadRepository).name;
-      // The other events
-    } else if (anyContext.repository) {
-      const fullRepo = anyContext.repository;
-      repo = fullRepo.substr(fullRepo.indexOf("/") + 1);
-    }
+    const repo = extractRepoFromContext(context);
 
     if (!repo) {
       context.log(

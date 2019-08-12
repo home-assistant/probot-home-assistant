@@ -11,6 +11,11 @@
 - Update GitHub app to set HTTP url to the deployed url
 - Install the GitHub app
 
+## Repositories
+
+- `home-assistant`
+- `home-assistant.io`
+
 ## Permissions
 
 - Issues: Read & write
