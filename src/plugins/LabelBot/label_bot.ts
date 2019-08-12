@@ -1,5 +1,5 @@
 import { ParsedPath } from "../../util/parse_path";
-import { getPullRequestFilesFromContext } from "../../util/pull_request";
+import { fetchPullRequestFilesFromContext } from "../../util/pull_request";
 
 // Convert a list of file paths to labels to set
 
@@ -44,7 +44,7 @@ export const initLabelBot = (app: Application) => {
 };
 
 export const runLabelBot = async (context: PRContext) => {
-  const files = await getPullRequestFilesFromContext(context);
+  const files = await fetchPullRequestFilesFromContext(context);
   const parsed = files.map((file) => new ParsedPath(file));
   const labelSet = new Set();
 

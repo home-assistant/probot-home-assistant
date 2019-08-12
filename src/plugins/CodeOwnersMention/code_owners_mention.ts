@@ -1,9 +1,11 @@
+const codeownersUtils = require("codeowners-utils");
 import { LabeledIssueOrPRContext } from "../../types";
 import { Application } from "probot";
 import { REPOSITORY_HOME_ASSISTANT } from "../../const";
 import { filterEventByRepo } from "../../util/filter_event_repo";
 import { filterEventNoBot } from "../../util/filter_event_no_bot";
-const codeownersUtils = require("codeowners-utils");
+import { getIssueFromPayload } from "../../util/issue";
+import { WebhookPayloadIssuesIssue } from "@octokit/webhooks";
 
 const NAME = "CodeOwnersMention";
 
@@ -21,8 +23,8 @@ export const runCodeOwnersMention = async (
   context: LabeledIssueOrPRContext
 ) => {
   const labelName = context.payload.label.name;
-  const triggerType = context.name === "issues" ? "issue" : "pull_request";
-  const triggerURL = context.payload[triggerType].html_url;
+  const triggerIssue = getIssueFromPayload(context);
+  const triggerURL = triggerIssue.html_url;
 
   if (labelName.indexOf("integration: ") === -1) {
     return;
@@ -57,9 +59,9 @@ export const runCodeOwnersMention = async (
 
   const codeownersLine = `${codeownersData.data.html_url}#L${match.line}`;
 
-  const issue = await context.github.issues.get(context.issue());
-  const assignees = issue.data.assignees.map((assignee) =>
-    assignee.login.toLowerCase()
+  // The type for the PR payload is wrong for assignees. Cast it to issue. type is the same.
+  const assignees = (triggerIssue.assignees as WebhookPayloadIssuesIssue["assignees"]).map(
+    (assignee) => assignee.login.toLowerCase()
   );
 
   const commentersData = await context.github.issues.listComments(
@@ -69,7 +71,7 @@ export const runCodeOwnersMention = async (
     commenter.user.login.toLowerCase()
   );
 
-  const payloadUsername = context.payload[triggerType].user.login;
+  const payloadUsername = triggerIssue.user.login;
 
   const mentions = match.owners.filter((rawUsername) => {
     const username = rawUsername.substring(1);
