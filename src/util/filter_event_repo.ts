@@ -8,7 +8,17 @@ export const filterEventByRepo = <T>(
 ): ((context: Context<T>) => Promise<void>) => {
   // Wrapped handler function
   return async (context: Context<T>) => {
-    const repo = this.payload.repository as PayloadRepository | undefined;
+    let repo: string | undefined;
+    const anyContext = context as any;
+
+    // PayloadWithRepository events
+    if (anyContext.payload && anyContext.payload.repository) {
+      repo = (anyContext.payload.repository as PayloadRepository).name;
+      // The other events
+    } else if (anyContext.repository) {
+      const fullRepo = anyContext.repository;
+      repo = fullRepo.substr(fullRepo.indexOf("/") + 1);
+    }
 
     if (!repo) {
       context.log(
@@ -16,9 +26,12 @@ export const filterEventByRepo = <T>(
       );
       return;
     }
-    if (repo.name !== filterRepository) {
+
+    const repoName = repo.substr(repo.indexOf("/") + 1);
+
+    if (repoName !== filterRepository) {
       context.log(
-        `Not running event for ${name} because repository ${repo.name} does not match ${filterRepository}.`
+        `Not running event for ${name} because repository ${repoName} does not match ${filterRepository}.`
       );
       return;
     }
