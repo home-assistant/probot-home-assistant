@@ -12,6 +12,11 @@ import smallPR from "./strategies/smallPR";
 import hasTests from "./strategies/hasTests";
 import { PRContext } from "../../types";
 import { Application } from "probot";
+import { filterEventByRepo } from "../../util/filter_event_repo";
+import { filterEventNoBot } from "../../util/filter_event_no_bot";
+import { REPOSITORY_HOME_ASSISTANT } from "../../const";
+
+const NAME = "LabelBot";
 
 const STRATEGIES = [
   componentAndPlatform,
@@ -24,13 +29,13 @@ const STRATEGIES = [
 ];
 
 export const initLabelBot = (app: Application) => {
-  app.on("pull_request.opened", async (context: PRContext) => {
-    if (context.isBot) {
-      context.log("Not doing action for a bot");
-      return;
-    }
-    await runLabelBot(context);
-  });
+  app.on(
+    "pull_request.opened",
+    filterEventNoBot(
+      NAME,
+      filterEventByRepo(NAME, REPOSITORY_HOME_ASSISTANT, runLabelBot)
+    )
+  );
 
   // app.on("issues.edited", async (context: PRContext) => {
   //   // This is also for PRs
