@@ -1,10 +1,40 @@
 import { IssuesGetResponse } from "@octokit/rest";
-import { Context } from "probot";
 import { PRContext, IssueContext } from "../types";
 import {
   WebhookPayloadIssuesIssue,
   WebhookPayloadPullRequestPullRequest,
 } from "@octokit/webhooks";
+import { GitHubAPI } from "probot/lib/github";
+
+interface GitHubAPIpatched extends GitHubAPI {
+  _hassIssuesCache?: { [key: string]: Promise<IssuesGetResponse> };
+}
+
+export const fetchIssueWithCache = async (
+  github: GitHubAPI,
+  owner: string,
+  repo: string,
+  number: number
+) => {
+  const patchedContext = github as GitHubAPIpatched;
+  const key = `${owner}/${repo}/${number}`;
+
+  if (!patchedContext._hassIssuesCache) {
+    patchedContext._hassIssuesCache = {};
+  }
+
+  if (!(key in patchedContext._hassIssuesCache)) {
+    patchedContext._hassIssuesCache[key] = github.issues
+      .get({
+        owner,
+        repo,
+        issue_number: number,
+      })
+      .then(({ data }) => data);
+  }
+
+  return patchedContext._hassIssuesCache[key];
+};
 
 // PRs are shaped as issues. This method will help normalize it.
 export const getIssueFromPayload = (
