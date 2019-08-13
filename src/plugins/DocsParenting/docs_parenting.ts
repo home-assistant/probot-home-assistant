@@ -17,7 +17,7 @@ export const initDocsParenting = (app: Application) => {
     }
   });
   app.on(
-    ["pull_request.opened", "pull_request.closed"],
+    ["pull_request.reopened", "pull_request.closed"],
     updateDocsParentStatus
   );
 };
