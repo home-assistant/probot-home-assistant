@@ -8,3 +8,7 @@ The goal fo this bot is to keep track if documentation PRs have related PRs. Thi
 
 - PRs against non-HA repo's, if there are up to 2 links to doc PRs in a new or updated PR description, we will add the `has-parent` label to the linked doc PRs.
 - If a doc PRs is opened or the description is updated, and the description links to PRs to non-doc repositories within the Home Assistant organization, add the `has-parent` label.
+- If a parent PR changes state to:
+  - `merged`: the docs PR will get label "parent-merged"
+  - `closed`: the docs PR will be closed
+  - `open`: make sure the docs PR is re-opened
