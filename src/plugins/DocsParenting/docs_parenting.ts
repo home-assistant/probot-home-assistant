@@ -1,9 +1,6 @@
 import { PRContext } from "../../types";
 import { Application } from "probot";
-import {
-  extractRepoFromContext,
-  filterEventByRepo,
-} from "../../util/filter_event_repo";
+import { extractRepoFromContext } from "../../util/filter_event_repo";
 import { REPO_HOME_ASSISTANT_IO, ORG_HASS } from "../../const";
 import { getIssueFromPayload } from "../../util/issue";
 import { extractIssuesOrPullRequestLinksFromMarkdown } from "../../util/text_parser";
@@ -101,9 +98,6 @@ const runDocsParentingDocs = async (context: PRContext) => {
   });
 };
 
-const LABEL_PARENT_MERGED = "parent-merged";
-const LABEL_PARENT_CLOSED = "parent-closed";
-
 /**
  * Goal is to reflect the parent status on the docs PR.
  *  - parent opened: make sure docs PR is open
@@ -111,6 +105,9 @@ const LABEL_PARENT_CLOSED = "parent-closed";
  *  - parent merged: add label "parent-merged"
  */
 const updateDocsParentStatus = async (context: PRContext) => {
+  if (extractRepoFromContext(context) === REPO_HOME_ASSISTANT_IO) {
+    return;
+  }
   const log = (msg: string) => context.log(NAME, "PARENT-STATUS-SYNC", msg);
 
   const pr = context.payload.pull_request;
