@@ -4,6 +4,7 @@ import { initCodeOwnersMention } from "./plugins/CodeOwnersMention/code_owners_m
 import { initReviewEnforcer } from "./plugins/ReviewEnforcer/review_enforcer";
 import { initDocsParenting } from "./plugins/DocsParenting/docs_parenting";
 import { initLabelCleaner } from "./plugins/LabelCleaner/label_cleaner";
+import { initDocsBranchLabels } from "./plugins/DocsBranchLabels/docs_branch_labels";
 
 export const probotApp = (app: Application) => {
   initLabelBot(app);
@@ -11,4 +12,5 @@ export const probotApp = (app: Application) => {
   initReviewEnforcer(app);
   initDocsParenting(app);
   initLabelCleaner(app);
+  initDocsBranchLabels(app);
 };
