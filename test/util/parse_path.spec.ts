@@ -1,6 +1,5 @@
 import * as assert from "assert";
 import { ParsedPath } from "../../src/util/parse_path";
-// var assert = require("assert");
 
 describe("parsePath", () => {
   it("detects core", () => {

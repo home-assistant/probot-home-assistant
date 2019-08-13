@@ -1,7 +1,7 @@
 import { PRContext } from "../../types";
 import { Application } from "probot";
 import { filterEventByRepo } from "../../util/filter_event_repo";
-import { REPOSITORY_HOME_ASSISTANT } from "../../const";
+import { REPO_HOME_ASSISTANT } from "../../const";
 import { filterEventNoBot } from "../../util/filter_event_no_bot";
 
 const NAME = "ReviewEnforcer";
@@ -19,7 +19,7 @@ export const initReviewEnforcer = (app: Application) => {
     "pull_request.opened",
     filterEventNoBot(
       NAME,
-      filterEventByRepo(NAME, REPOSITORY_HOME_ASSISTANT, runReviewEnforcer)
+      filterEventByRepo(NAME, REPO_HOME_ASSISTANT, runReviewEnforcer)
     )
   );
 };
