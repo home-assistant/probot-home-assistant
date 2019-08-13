@@ -3,23 +3,22 @@ import {
   ParsedGitHubIssueOrPR,
   extractIssuesOrPullRequestLinksFromHTML,
   extractIssuesOrPullRequestLinksFromMarkdown,
-} from "../../src/util/pull_request";
-import { GitHubAPI } from "probot/lib/github";
+} from "../../src/util/text_parser";
 
 describe("ParsedGitHubIssueOrPR", () => {
   it("parses pull request link", () => {
     const result = new ParsedGitHubIssueOrPR(
       "home-assistant",
       "home-assistant.io",
-      "10120"
+      10120
     );
-    assert.equal(result.organization, "home-assistant");
-    assert.equal(result.repository, "home-assistant.io");
-    assert.equal(result.number, "10120");
+    assert.equal(result.owner, "home-assistant");
+    assert.equal(result.repo, "home-assistant.io");
+    assert.equal(result.number, 10120);
   });
 });
 
-describe("extractPullRequestLinks", () => {
+describe("extractPullRequestLinksFromHTML", () => {
   it("finds pull request links", () => {
     const result = extractIssuesOrPullRequestLinksFromHTML(
       `
@@ -34,18 +33,18 @@ https://github.com/home-assistant/home-assistant-polymer/pull/512
     assert.equal(result.length, 2);
 
     const linkDocs = result[0];
-    assert.equal(linkDocs.organization, "home-assistant");
-    assert.equal(linkDocs.repository, "home-assistant.io");
-    assert.equal(linkDocs.number, "10120");
+    assert.equal(linkDocs.owner, "home-assistant");
+    assert.equal(linkDocs.repo, "home-assistant.io");
+    assert.equal(linkDocs.number, 10120);
 
     const linkPolymer = result[1];
-    assert.equal(linkPolymer.organization, "home-assistant");
-    assert.equal(linkPolymer.repository, "home-assistant-polymer");
-    assert.equal(linkPolymer.number, "512");
+    assert.equal(linkPolymer.owner, "home-assistant");
+    assert.equal(linkPolymer.repo, "home-assistant-polymer");
+    assert.equal(linkPolymer.number, 512);
   });
 });
 
-describe("extractPullRequestLinks", () => {
+describe("extractPullRequestLinksFromMarkdown", () => {
   it("finds pull request links", () => {
     const result = extractIssuesOrPullRequestLinksFromMarkdown(
       `
@@ -58,8 +57,8 @@ describe("extractPullRequestLinks", () => {
     assert.equal(result.length, 1);
 
     const linkDocs = result[0];
-    assert.equal(linkDocs.organization, "home-assistant");
-    assert.equal(linkDocs.repository, "home-assistant.io");
-    assert.equal(linkDocs.number, "10052");
+    assert.equal(linkDocs.owner, "home-assistant");
+    assert.equal(linkDocs.repo, "home-assistant.io");
+    assert.equal(linkDocs.number, 10052);
   });
 });
