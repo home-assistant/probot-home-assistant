@@ -18,10 +18,16 @@ export const initDocsBranchLabels = (app: Application) => {
 export const runDocsBranchLabels = async (context: PRContext) => {
   const pr = context.payload.pull_request;
   const targetBranch = pr.base.ref;
-
+  // Typing is wrong for PRs, so use labels type from issues
+  const currentLabels = (pr.labels as WebhookPayloadIssuesIssue["labels"]).map(
+    (label) => label.name
+  );
   const tasks: Promise<unknown>[] = [];
 
-  if (BRANCHES.includes(targetBranch)) {
+  if (
+    BRANCHES.includes(targetBranch) &&
+    !currentLabels.includes(targetBranch)
+  ) {
     context.log(NAME, `Adding label ${targetBranch} to PR ${pr.number}`);
     tasks.push(
       context.github.issues.addLabels({
@@ -32,10 +38,8 @@ export const runDocsBranchLabels = async (context: PRContext) => {
   }
 
   // Find labels to remove
-  // Typing is wrong for PRs, so use labels type from issues
-  (pr.labels as WebhookPayloadIssuesIssue["labels"])
-    .map((label) => label.name)
-    .filter((label) => BRANCHES.includes(label))
+  currentLabels
+    .filter((label) => BRANCHES.includes(label) && label !== targetBranch)
     .forEach((label) =>
       tasks.push(
         context.github.issues.removeLabel({ ...context.issue(), name: label })
