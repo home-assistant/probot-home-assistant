@@ -1,8 +1,8 @@
 import * as assert from "assert";
 import {
   ParsedGitHubIssueOrPR,
-  extractIssuesOrPullRequestLinksFromHTML,
-  extractIssuesOrPullRequestLinksFromMarkdown,
+  extractPullRequestURLLinks,
+  extractIssuesOrPullRequestMarkdownLinks,
 } from "../../src/util/text_parser";
 
 describe("ParsedGitHubIssueOrPR", () => {
@@ -18,9 +18,9 @@ describe("ParsedGitHubIssueOrPR", () => {
   });
 });
 
-describe("extractPullRequestLinksFromHTML", () => {
+describe("extractPullRequestURLLinks", () => {
   it("finds pull request links", () => {
-    const result = extractIssuesOrPullRequestLinksFromHTML(
+    const result = extractPullRequestURLLinks(
       `
 Hello, this is a new PR to add X.
 
@@ -44,9 +44,9 @@ https://github.com/home-assistant/home-assistant-polymer/pull/512
   });
 });
 
-describe("extractPullRequestLinksFromMarkdown", () => {
+describe("extractIssuesOrPullRequestMarkdownLinks", () => {
   it("finds pull request links", () => {
-    const result = extractIssuesOrPullRequestLinksFromMarkdown(
+    const result = extractIssuesOrPullRequestMarkdownLinks(
       `
       ## Description:
       This bumps the version of PyRMVtransport to v0.2.8 and adds a config flow for RMV transport. The sensors can now also be shown on the map.

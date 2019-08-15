@@ -43,7 +43,7 @@ export class ParsedGitHubIssueOrPR {
   }
 }
 
-export const extractIssuesOrPullRequestLinksFromHTML = (body: string) => {
+export const extractPullRequestURLLinks = (body: string) => {
   const re = /https:\/\/github.com\/([\w-\.]+)\/([\w-\.]+)\/pull\/(\d+)/g;
   let match;
   const results: ParsedGitHubIssueOrPR[] = [];
@@ -60,7 +60,7 @@ export const extractIssuesOrPullRequestLinksFromHTML = (body: string) => {
   return results;
 };
 
-export const extractIssuesOrPullRequestLinksFromMarkdown = (body: string) => {
+export const extractIssuesOrPullRequestMarkdownLinks = (body: string) => {
   const re = /([\w-\.]+)\/([\w-\.]+)#(\d+)/g;
   let match;
   const results: ParsedGitHubIssueOrPR[] = [];
