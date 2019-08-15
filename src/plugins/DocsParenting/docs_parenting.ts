@@ -3,7 +3,10 @@ import { Application } from "probot";
 import { extractRepoFromContext } from "../../util/filter_event_repo";
 import { REPO_HOME_ASSISTANT_IO, ORG_HASS } from "../../const";
 import { getIssueFromPayload } from "../../util/issue";
-import { extractIssuesOrPullRequestLinksFromMarkdown } from "../../util/text_parser";
+import {
+  extractIssuesOrPullRequestMarkdownLinks,
+  extractPullRequestURLLinks,
+} from "../../util/text_parser";
 import { getPRState } from "../../util/pull_request";
 
 const NAME = "DocsParenting";
@@ -26,9 +29,9 @@ export const initDocsParenting = (app: Application) => {
 const runDocsParentingNonDocs = async (context: PRContext) => {
   const triggerIssue = getIssueFromPayload(context);
 
-  const linksToDocs = extractIssuesOrPullRequestLinksFromMarkdown(
-    triggerIssue.body
-  ).filter((link) => link.repo === REPO_HOME_ASSISTANT_IO);
+  const linksToDocs = extractIssuesOrPullRequestMarkdownLinks(triggerIssue.body)
+    .concat(extractPullRequestURLLinks(triggerIssue.body))
+    .filter((link) => link.repo === REPO_HOME_ASSISTANT_IO);
 
   context.log(
     NAME,
@@ -70,11 +73,13 @@ const runDocsParentingNonDocs = async (context: PRContext) => {
 // Deal with PRs on Home Assistant.io repo
 const runDocsParentingDocs = async (context: PRContext) => {
   const triggerIssue = getIssueFromPayload(context);
-  const linksToNonDocs = extractIssuesOrPullRequestLinksFromMarkdown(
+  const linksToNonDocs = extractIssuesOrPullRequestMarkdownLinks(
     triggerIssue.body
-  ).filter(
-    (link) => link.owner === ORG_HASS && link.repo !== REPO_HOME_ASSISTANT_IO
-  );
+  )
+    .concat(extractPullRequestURLLinks(triggerIssue.body))
+    .filter(
+      (link) => link.owner === ORG_HASS && link.repo !== REPO_HOME_ASSISTANT_IO
+    );
 
   context.log(
     NAME,
@@ -112,9 +117,9 @@ const updateDocsParentStatus = async (context: PRContext) => {
 
   const pr = context.payload.pull_request;
 
-  const linksToDocs = extractIssuesOrPullRequestLinksFromMarkdown(
-    pr.body
-  ).filter((link) => link.repo === REPO_HOME_ASSISTANT_IO);
+  const linksToDocs = extractIssuesOrPullRequestMarkdownLinks(pr.body).filter(
+    (link) => link.repo === REPO_HOME_ASSISTANT_IO
+  );
 
   log(`PR ${pr.number} contains ${linksToDocs.length} links to doc PRs`);
 
