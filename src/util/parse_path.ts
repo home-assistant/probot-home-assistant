@@ -32,7 +32,7 @@ export class ParsedPath {
 
     const subfolder = parts.shift();
 
-    if (subfolder !== "components") {
+    if (!["components", "generated"].includes(subfolder)) {
       this.core = true;
 
       if (subfolder.endsWith(".py")) {
