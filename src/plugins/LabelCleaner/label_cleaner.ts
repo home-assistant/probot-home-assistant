@@ -13,7 +13,7 @@ const TO_CLEAN: { [key: string]: string[] } = {
   [REPO_HOME_ASSISTANT_IO]: [
     "needs-rebase",
     "in-progress",
-    "awaiting-parent",
+    "awaits-parent",
     "ready-for-review",
     "parent-merged",
   ],
