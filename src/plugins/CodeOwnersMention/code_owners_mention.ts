@@ -108,6 +108,20 @@ export const runCodeOwnersMention = async (
     );
   }
 
+  // Add a label if author of issue/PR is a code owner
+  if (
+    match.owners.some((rawUsername: string) => {
+      const username = rawUsername.substring(1);
+      return payloadUsername == username;
+    })
+  ) {
+    promises.push(
+      context.github.issues.addLabels(
+        context.issue({ labels: ["by-code-owner"] })
+      )
+    );
+  }
+
   await Promise.all(promises);
 };
 
