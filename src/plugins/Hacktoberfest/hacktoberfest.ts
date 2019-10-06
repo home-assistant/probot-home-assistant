@@ -28,7 +28,7 @@ const runHacktoberfestClosedPR = async (context: PRContext) => {
 
   // Don't do something if the PR got merged or if it had no Hacktoberfest label.
   if (
-    pr.state == "merged" ||
+    pr.merged ||
     (pr.labels as WebhookPayloadIssuesIssue["labels"]).find(
       (label) => label.name === "Hacktoberfest"
     ) == undefined
