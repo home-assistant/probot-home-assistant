@@ -11,21 +11,9 @@ const isHacktoberfestLive = () => new Date().getMonth() == 9;
 
 export const initHacktoberfest = (app: Application) => {
   if (isHacktoberfestLive()) {
-    app.on(
-      ["pull_request.opened"],
-      filterEventNoBot(
-        NAME,
-        filterEventByRepo(NAME, REPO_HOME_ASSISTANT, runHacktoberfestNewPR)
-      )
-    );
+    app.on(["pull_request.opened"], runHacktoberfestNewPR);
   }
-  app.on(
-    ["pull_request.closed"],
-    filterEventNoBot(
-      NAME,
-      filterEventByRepo(NAME, REPO_HOME_ASSISTANT, runHacktoberfestClosedPR)
-    )
-  );
+  app.on(["pull_request.closed"], runHacktoberfestClosedPR);
 };
 
 const runHacktoberfestNewPR = async (context: PRContext) => {
