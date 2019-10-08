@@ -12,10 +12,7 @@ const NAME = "CodeOwnersMention";
 export const initCodeOwnersMention = (app: Application) => {
   app.on(
     ["issues.labeled", "pull_request.labeled"],
-    filterEventNoBot(
-      NAME,
-      filterEventByRepo(NAME, REPO_HOME_ASSISTANT, runCodeOwnersMention)
-    )
+    filterEventByRepo(NAME, REPO_HOME_ASSISTANT, runCodeOwnersMention)
   );
 };
 
@@ -57,6 +54,11 @@ export const runCodeOwnersMention = async (
     return;
   }
 
+  const owners = match.owners.map(
+    // Remove the `@`
+    (usr) => usr.substring(1)
+  );
+
   const codeownersLine = `${codeownersData.data.html_url}#L${match.line}`;
 
   // The type for the PR payload is wrong for assignees. Cast it to issue. type is the same.
@@ -72,15 +74,11 @@ export const runCodeOwnersMention = async (
   );
 
   const payloadUsername = triggerIssue.user.login;
+  const ownersMinusAuthor = owners.filter((usr) => usr !== payloadUsername);
 
-  const mentions = match.owners.filter((rawUsername) => {
-    const username = rawUsername.substring(1);
-    return (
-      payloadUsername != username &&
-      assignees.indexOf(username) === -1 &&
-      commenters.indexOf(username) === -1
-    );
-  });
+  const mentions = ownersMinusAuthor.filter(
+    (usr) => !assignees.includes(usr) && !commenters.includes(usr)
+  );
 
   const triggerLabel = context.name === "issues" ? "issue" : "pull request";
 
@@ -88,33 +86,24 @@ export const runCodeOwnersMention = async (
     ", "
   )}, mind taking a look at this ${triggerLabel} as its been labeled with a integration (\`${integrationName}\`) you are listed as a [codeowner](${codeownersLine}) for? Thanks!`;
 
-  context.log(
-    `Adding comment to ${triggerLabel} ${triggerURL}: ${commentBody}`
-  );
-
-  const newAssignees = match.owners.map((rawUsername) =>
-    rawUsername.substring(1)
-  );
-
   const promises: Promise<unknown>[] = [
     context.github.issues.addAssignees(
-      context.issue({ assignees: newAssignees })
+      context.issue({ assignees: ownersMinusAuthor })
     ),
   ];
 
   if (mentions.length > 0) {
+    context.log(
+      `Adding comment to ${triggerLabel} ${triggerURL}: ${commentBody}`
+    );
+
     promises.push(
       context.github.issues.createComment(context.issue({ body: commentBody }))
     );
   }
 
   // Add a label if author of issue/PR is a code owner
-  if (
-    match.owners.some((rawUsername: string) => {
-      const username = rawUsername.substring(1);
-      return payloadUsername == username;
-    })
-  ) {
+  if (owners.includes(payloadUsername)) {
     promises.push(
       context.github.issues.addLabels(
         context.issue({ labels: ["by-code-owner"] })
