@@ -76,23 +76,23 @@ export const runCodeOwnersMention = async (
   const payloadUsername = triggerIssue.user.login;
   const ownersMinusAuthor = owners.filter((usr) => usr !== payloadUsername);
 
-  const mentions = ownersMinusAuthor.filter(
-    (usr) => !assignees.includes(usr) && !commenters.includes(usr)
-  );
-
-  const triggerLabel = context.name === "issues" ? "issue" : "pull request";
-
-  const commentBody = `Hey there ${mentions.join(
-    ", "
-  )}, mind taking a look at this ${triggerLabel} as its been labeled with a integration (\`${integrationName}\`) you are listed as a [codeowner](${codeownersLine}) for? Thanks!`;
-
   const promises: Promise<unknown>[] = [
     context.github.issues.addAssignees(
       context.issue({ assignees: ownersMinusAuthor })
     ),
   ];
 
+  const mentions = ownersMinusAuthor
+    .filter((usr) => !assignees.includes(usr) && !commenters.includes(usr))
+    // Add `@` because used in a comment.
+    .map((usr) => `@${usr}`);
+
   if (mentions.length > 0) {
+    const triggerLabel = context.name === "issues" ? "issue" : "pull request";
+    const commentBody = `Hey there ${mentions.join(
+      ", "
+    )}, mind taking a look at this ${triggerLabel} as its been labeled with a integration (\`${integrationName}\`) you are listed as a [codeowner](${codeownersLine}) for? Thanks!`;
+
     context.log(
       `Adding comment to ${triggerLabel} ${triggerURL}: ${commentBody}`
     );
