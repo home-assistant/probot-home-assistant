@@ -4,11 +4,11 @@ import comp from "../../../../src/plugins/LabelBot/strategies/componentAndPlatfo
 
 import { ParsedPath } from "../../../../src/util/parse_path";
 
-function getOutput(file) {
+function getOutput(file, prefix = "homeassistant/components/") {
   var output = comp(null, [
     new ParsedPath(
       // @ts-ignore
-      { filename: "homeassistant/components/" + file }
+      { filename: prefix + file }
     ),
   ]);
   return output.length ? output[0] : null;
@@ -40,7 +40,7 @@ describe("componentAndPlatform", () => {
   });
 
   it("component services", () => {
-    assert.deepEqual(getOutput("light/services.yaml"), null);
+    assert.deepEqual(getOutput("light/services.yaml"), "integration: light");
   });
 
   it("generic services", () => {
@@ -49,5 +49,12 @@ describe("componentAndPlatform", () => {
 
   it("component init file", () => {
     assert.deepEqual(getOutput("cover/__init__.py"), "integration: cover");
+  });
+
+  it("component tests", () => {
+    assert.deepEqual(
+      getOutput("linky/conftest.py", "tests/components/"),
+      "integration: linky"
+    );
   });
 });
