@@ -1,7 +1,7 @@
 const codeownersUtils = require("codeowners-utils");
 import { LabeledIssueOrPRContext } from "../../types";
 import { Application } from "probot";
-import { REPO_HOME_ASSISTANT } from "../../const";
+import { REPO_CORE } from "../../const";
 import { filterEventByRepo } from "../../util/filter_event_repo";
 import { filterEventNoBot } from "../../util/filter_event_no_bot";
 import { getIssueFromPayload } from "../../util/issue";
@@ -12,7 +12,7 @@ const NAME = "CodeOwnersMention";
 export const initCodeOwnersMention = (app: Application) => {
   app.on(
     ["issues.labeled", "pull_request.labeled"],
-    filterEventByRepo(NAME, REPO_HOME_ASSISTANT, runCodeOwnersMention)
+    filterEventByRepo(NAME, REPO_CORE, runCodeOwnersMention)
   );
 };
 

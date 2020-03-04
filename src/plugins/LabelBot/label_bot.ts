@@ -14,7 +14,7 @@ import { PRContext } from "../../types";
 import { Application } from "probot";
 import { filterEventByRepo } from "../../util/filter_event_repo";
 import { filterEventNoBot } from "../../util/filter_event_no_bot";
-import { REPO_HOME_ASSISTANT } from "../../const";
+import { REPO_CORE } from "../../const";
 
 const NAME = "LabelBot";
 
@@ -31,10 +31,7 @@ const STRATEGIES = [
 export const initLabelBot = (app: Application) => {
   app.on(
     "pull_request.opened",
-    filterEventNoBot(
-      NAME,
-      filterEventByRepo(NAME, REPO_HOME_ASSISTANT, runLabelBot)
-    )
+    filterEventNoBot(NAME, filterEventByRepo(NAME, REPO_CORE, runLabelBot))
   );
 
   // app.on("issues.edited", async (context: PRContext) => {
