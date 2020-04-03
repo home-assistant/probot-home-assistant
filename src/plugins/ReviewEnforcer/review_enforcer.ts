@@ -13,12 +13,9 @@ import { ParsedDocsPath } from "../../util/parse_docs_path";
 const NAME = "ReviewEnforcer";
 
 const USERS = [
-  // Konnected.io, tried to merge an affiliate integration to monetize HA
-  "heythisisnate",
-  "snicker",
 ];
 
-const INTEGRATIONS = ["konnected", "xiaomi_miio"];
+const INTEGRATIONS = ["xiaomi_miio"];
 
 export const initReviewEnforcer = (app: Application) => {
   app.on("pull_request.opened", filterEventNoBot(NAME, runReviewEnforcer));
@@ -66,11 +63,9 @@ const checkPythonPRFiles = async (context: PRContext) => {
 };
 
 const markForReview = async (context: PRContext) => {
-  await Promise.all([
-    context.github.issues.createComment(
-      context.issue({
-        body: `This pull request needs to be manually signed off by @home-assistant/core before it can get merged.`,
-      })
-    ),
-  ]);
+  await context.github.issues.createComment(
+    context.issue({
+      body: `This pull request needs to be manually signed off by @home-assistant/core before it can get merged.`,
+    })
+  );
 };
