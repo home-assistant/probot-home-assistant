@@ -1,6 +1,6 @@
 import { PRContext } from "../../types";
 import { Application } from "probot";
-import { REPO_HOME_ASSISTANT, REPO_HOME_ASSISTANT_IO } from "../../const";
+import { REPO_CORE, REPO_HOME_ASSISTANT_IO } from "../../const";
 import { extractRepoFromContext } from "../../util/filter_event_repo";
 import { getIssueFromPayload } from "../../util/issue";
 import { WebhookPayloadIssuesIssue } from "@octokit/webhooks";
@@ -9,7 +9,7 @@ const NAME = "LabelCleaner";
 
 // Map repositories to labels that need cleaning.
 const TO_CLEAN: { [key: string]: string[] } = {
-  [REPO_HOME_ASSISTANT]: ["Ready for review"],
+  [REPO_CORE]: ["Ready for review"],
   [REPO_HOME_ASSISTANT_IO]: [
     "needs-rebase",
     "in-progress",

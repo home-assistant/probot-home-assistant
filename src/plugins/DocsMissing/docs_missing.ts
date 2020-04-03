@@ -1,6 +1,6 @@
 import { PRContext } from "../../types";
 import { Application } from "probot";
-import { REPO_HOME_ASSISTANT } from "../../const";
+import { REPO_CORE } from "../../const";
 import { filterEventByRepo } from "../../util/filter_event_repo";
 import { WebhookPayloadIssuesIssue } from "@octokit/webhooks";
 
@@ -9,7 +9,7 @@ const NAME = "DocsMissing";
 export const initDocsMissing = (app: Application) => {
   app.on(
     "pull_request.labeled",
-    filterEventByRepo(NAME, REPO_HOME_ASSISTANT, runDocsMissing)
+    filterEventByRepo(NAME, REPO_CORE, runDocsMissing)
   );
 };
 

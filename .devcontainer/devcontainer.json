@@ -1,0 +1,15 @@
+// See https://aka.ms/vscode-remote/devcontainer.json for format details.
+{
+  "name": "Probot Home Assistant",
+  "context": "..",
+  "dockerFile": "Dockerfile",
+  "extensions": [
+    "visualstudioexptteam.vscodeintellicode",
+    "esbenp.prettier-vscode"
+  ],
+  "settings": {
+    "editor.formatOnPaste": false,
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true
+  }
+}

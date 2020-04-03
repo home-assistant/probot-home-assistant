@@ -1,6 +1,6 @@
 # Docs Missing
 
-Repository: `home-assistant`
+Repository: `core`
 
 Maintain a commit status on a PR based on if the label "docs-missing" is present or not.
 

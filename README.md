@@ -13,7 +13,7 @@
 
 ## Repositories
 
-- `home-assistant`
+- `core`
 - `home-assistant.io`
 
 ## Permissions

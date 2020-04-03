@@ -2,7 +2,7 @@ import { fetchPullRequestFilesFromContext } from "../../util/pull_request";
 import { PRContext } from "../../types";
 import { Application } from "probot";
 import { filterEventByRepo } from "../../util/filter_event_repo";
-import { REPO_HOME_ASSISTANT } from "../../const";
+import { REPO_CORE } from "../../const";
 import { filterEventNoBot } from "../../util/filter_event_no_bot";
 
 const NAME = "DependencyBump";
@@ -22,7 +22,7 @@ export const initDependencyBump = (app: Application) => {
     ["pull_request.opened"],
     filterEventNoBot(
       NAME,
-      filterEventByRepo(NAME, REPO_HOME_ASSISTANT, runDependencyBump)
+      filterEventByRepo(NAME, REPO_CORE, runDependencyBump)
     )
   );
 };

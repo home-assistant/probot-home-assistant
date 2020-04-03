@@ -4,7 +4,7 @@ import {
   filterEventByRepo,
   extractRepoFromContext,
 } from "../../util/filter_event_repo";
-import { REPO_HOME_ASSISTANT, REPO_HOME_ASSISTANT_IO } from "../../const";
+import { REPO_CORE, REPO_HOME_ASSISTANT_IO } from "../../const";
 import { filterEventNoBot } from "../../util/filter_event_no_bot";
 import { fetchPullRequestFilesFromContext } from "../../util/pull_request";
 import { ParsedPath } from "../../util/parse_path";
@@ -32,7 +32,7 @@ const runReviewEnforcer = async (context: PRContext) => {
 
   const repo = extractRepoFromContext(context);
 
-  if (repo === REPO_HOME_ASSISTANT) {
+  if (repo === REPO_CORE) {
     await checkPythonPRFiles(context);
   } else if (repo === REPO_HOME_ASSISTANT_IO) {
     await checkDocsPRFiles(context);

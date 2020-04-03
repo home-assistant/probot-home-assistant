@@ -1,7 +1,7 @@
 import { PRContext } from "../../types";
 import { Application } from "probot";
 import { filterEventByRepo } from "../../util/filter_event_repo";
-import { REPO_HOME_ASSISTANT } from "../../const";
+import { REPO_CORE } from "../../const";
 import { filterEventNoBot } from "../../util/filter_event_no_bot";
 import { WebhookPayloadIssuesIssue } from "@octokit/webhooks";
 

@@ -1,5 +1,5 @@
 export const ORG_HASS = "home-assistant";
-export const REPO_HOME_ASSISTANT = "home-assistant";
+export const REPO_CORE = "core";
 export const REPO_HOME_ASSISTANT_IO = "home-assistant.io";
 
 export const entityComponents = [
