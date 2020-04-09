@@ -8,7 +8,7 @@ const NAME = "DocsMissing";
 
 export const initDocsMissing = (app: Application) => {
   app.on(
-    "pull_request.labeled",
+    ["pull_request.labeled", "pull_request.unlabeled"],
     filterEventByRepo(NAME, REPO_CORE, runDocsMissing)
   );
 };
