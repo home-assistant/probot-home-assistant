@@ -20,6 +20,9 @@ The goal of this bot is to determine if the documentation PRs have the correct t
   - Add the in-progress label
   - Assign the PR author
   - Leave the user a message:
-    > It seems that this PR is targeted against an incorrect branch. Documentation updates which apply to our current stable release should target the `current` branch. Please change the target branch of this PR to `current` and rebase if needed.
+    > It seems that this PR is targeted against an incorrect branch. Documentation updates which apply to our current stable release should target the `current` branch. Please change the target branch of this PR to `current` and rebase if needed. If this is documentation for a new feature, please add a link to that PR in your description.
 
-- If there is a link to the `home-assistant/brands` repo, it does not do anything.
+**Links for the following repositories does not count:**
+
+- brands
+- developers.home-assistant
