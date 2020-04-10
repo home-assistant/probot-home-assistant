@@ -62,11 +62,10 @@ const wrongTargetBranchDetected = async (
   const labels = ["needs-rebase", "in-progress"];
   const author = context.payload.sender.login;
   const promises: Promise<unknown>[] = [];
-  const body: string = `${
+  const body: string =
     correctTargetBranch === "next"
       ? bodyShouldTargetNext
-      : bodyShouldTargetCurrent
-  }`;
+      : bodyShouldTargetCurrent;
 
   context.log(NAME, `Adding ${labels} to PR`);
   promises.push(
