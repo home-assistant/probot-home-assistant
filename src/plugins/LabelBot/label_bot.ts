@@ -10,6 +10,7 @@ import warnOnMergeToMaster from "./strategies/warnOnMergeToMaster";
 import markCore from "./strategies/markCore";
 import smallPR from "./strategies/smallPR";
 import hasTests from "./strategies/hasTests";
+import typeOfChange from "./strategies/typeOfChange";
 import { PRContext } from "../../types";
 import { Application } from "probot";
 import { filterEventByRepo } from "../../util/filter_event_repo";
@@ -26,6 +27,7 @@ const STRATEGIES = [
   markCore,
   smallPR,
   hasTests,
+  typeOfChange,
 ];
 
 export const initLabelBot = (app: Application) => {
