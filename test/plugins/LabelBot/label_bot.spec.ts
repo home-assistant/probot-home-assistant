@@ -33,7 +33,7 @@ describe("LabelBotPlugin", () => {
       ],
     });
     assert.deepEqual(setLabels, {
-      labels: ["integration: mqtt", "merging-to-master", "core"],
+      labels: ["integration: mqtdt", "merging-to-master", "core"],
     });
   });
 });
