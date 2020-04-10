@@ -2,14 +2,19 @@ import { PRContext } from "../../types";
 import { Application } from "probot";
 import { filterEventByRepo } from "../../util/filter_event_repo";
 import { filterEventNoBot } from "../../util/filter_event_no_bot";
-import { REPO_HOME_ASSISTANT_IO, ORG_HASS } from "../../const";
+import {
+  REPO_BRANDS,
+  REPO_DEV_DOCUMENTATION,
+  REPO_HOME_ASSISTANT_IO,
+  ORG_HASS,
+} from "../../const";
 import {
   extractIssuesOrPullRequestMarkdownLinks,
   extractPullRequestURLLinks,
 } from "../../util/text_parser";
 
 const NAME = "DocsTargetBranch";
-const SKIP_REPOS = ["brands"];
+const SKIP_REPOS = [REPO_BRANDS, REPO_DEV_DOCUMENTATION];
 
 export const bodyShouldTargetCurrent: string =
   "It seems that this PR is targeted against an incorrect branch. Documentation updates which apply to our current stable release should target the `current` branch. Please change the target branch of this PR to `current` and rebase if needed. If this is documentation for a new feature, please add a link to that PR in your description.";
@@ -18,7 +23,7 @@ export const bodyShouldTargetNext: string =
 
 export const initDocsTargetBranch = (app: Application) => {
   app.on(
-    "pull_request.opened",
+    ["pull_request.opened", "pull_request.edited"],
     filterEventNoBot(
       NAME,
       filterEventByRepo(NAME, REPO_HOME_ASSISTANT_IO, runDocsTargetBranch)
