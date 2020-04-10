@@ -12,7 +12,7 @@ const NAME = "DocsTargetBranch";
 const SKIP_REPOS = ["brands"];
 
 export const bodyShouldTargetCurrent: string =
-  "It seems that this PR is targeted against an incorrect branch. Documentation updates which apply to our current stable release need should target the `current` branch. Please change the target branch of this PR to `current` and rebase if needed.";
+  "It seems that this PR is targeted against an incorrect branch. Documentation updates which apply to our current stable release should target the `current` branch. Please change the target branch of this PR to `current` and rebase if needed.";
 export const bodyShouldTargetNext: string =
   "It seems that this PR is targeted against an incorrect branch since it has a parent PR on one of our codebases. Documentation that needs to be updated for an upcoming release should target the `next` branch. Please change the target branch of this PR to `next` and rebase if needed.";
 
