@@ -79,7 +79,7 @@ const wrongTargetBranchDetected = async (
     )
   );
 
-  context.log(NAME, `Addin ${author} as assignee`);
+  context.log(NAME, `Adding ${author} as assignee`);
   promises.push(
     context.github.issues.addAssignees(context.issue({ assignees: [author] }))
   );
