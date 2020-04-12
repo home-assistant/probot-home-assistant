@@ -1,38 +1,50 @@
 import { PRContext } from "../../../types";
 import { ParsedPath } from "../../../util/parse_path";
+import { extractTasks } from "../../../util/text_parser";
 
 const BODYMATCHES = [
   {
-    key: /\\n- \[(x|X)\] Bugfix /,
-    label: "type: bugfix",
+    description: "Bugfix (non-breaking change which fixes an issue)",
+    labels: ["type: bugfix"],
   },
   {
-    key: /\\n- \[(x|X)\] Dependency upgrade/,
-    label: "type: dependency",
+    description: "Dependency upgrade",
+    labels: ["type: dependency"],
   },
   {
-    key: /\\n- \[(x|X)\] New integration /,
-    label: "type: new-integration",
+    description: "New integration (thank you!)",
+    labels: ["type: new-integration"],
   },
   {
-    key: /\\n- \[(x|X)\] New feature /,
-    label: "type: new-feature",
+    description:
+      "New feature (which adds functionality to an existing integration)",
+    labels: ["type: new-feature"],
   },
   {
-    key: /\\n- \[(x|X)\] Breaking change /,
-    label: "type: breaking-change",
+    description:
+      "Breaking change (fix/feature causing existing functionality to break)",
+    labels: ["type: breaking-change"],
   },
   {
-    key: /\\n- \[(x|X)\] Code quality improvements /,
-    label: "type: code-quality",
+    description:
+      "Code quality improvements to existing code or addition of tests",
+    labels: ["type: code-quality"],
   },
 ];
 
 export default function(context: PRContext, parsed: ParsedPath[]) {
+  const completedTasks = extractTasks(context.payload.pull_request.body || "")
+    .filter((task) => {
+      return task.checked;
+    })
+    .map((task) => task.description);
+
   let labels: string[] = [];
   BODYMATCHES.forEach((match) => {
-    if (match.key.test(context.payload.pull_request.body)) {
-      labels.push(match.label);
+    if (completedTasks.includes(match.description)) {
+      match.labels.forEach((label) => {
+        labels.push(label);
+      });
     }
   });
 
