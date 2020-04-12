@@ -1,6 +1,7 @@
 import { GitHubAPI } from "probot/lib/github";
 import { fetchIssueWithCache } from "./issue";
 import { fetchPRWithCache } from "./pull_request";
+import { PullOrBodyTask } from "../types";
 
 export class ParsedGitHubIssueOrPR {
   public owner: string;
@@ -75,4 +76,28 @@ export const extractIssuesOrPullRequestMarkdownLinks = (body: string) => {
   } while (match);
 
   return results;
+};
+
+export const extractTasks = (body: string) => {
+  const matchAll = /- \[( |)(x|X| |)(| )\] /;
+  const matchChecked = /- \[( |)(x|X)(| )\] /;
+  let tasks: PullOrBodyTask[] = [];
+
+  body.split("\n").forEach((line: string) => {
+    let checked: boolean = false;
+    let description: string;
+    if (!line.trim().startsWith("- [")) {
+      return;
+    }
+
+    if (matchChecked.test(line)) {
+      checked = true;
+    }
+    description = line
+      .split(matchAll)
+      [line.split(matchAll).length - 1].trim()
+      .replace(/\\r/g, "");
+    tasks.push({ checked, description });
+  });
+  return tasks;
 };
