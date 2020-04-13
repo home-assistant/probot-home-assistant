@@ -15,7 +15,7 @@ describe("LabelBotPlugin - typeOfChange", () => {
           base: {
             ref: "master",
           },
-          body: "\\n- [X] Dependency upgrade",
+          body: "\n- [X] Dependency upgrade",
         },
       },
       // @ts-ignore
@@ -47,7 +47,7 @@ describe("LabelBotPlugin - typeOfChange", () => {
           base: {
             ref: "master",
           },
-          body: "\\n- [X] Bugfix (non-breakin change)",
+          body: "\n- [X] Bugfix (non-breaking change which fixes an issue)",
         },
       },
       // @ts-ignore
@@ -79,7 +79,7 @@ describe("LabelBotPlugin - typeOfChange", () => {
           base: {
             ref: "master",
           },
-          body: "\\n- [X] New integration (thank you!)",
+          body: "\n- [X] New integration (thank you!)",
         },
       },
       // @ts-ignore
@@ -112,7 +112,7 @@ describe("LabelBotPlugin - typeOfChange", () => {
             ref: "master",
           },
           body:
-            "\\n- [X] New feature (which adds functionality to an existing integration)",
+            "\n- [X] New feature (which adds functionality to an existing integration)",
         },
       },
       // @ts-ignore
@@ -145,7 +145,7 @@ describe("LabelBotPlugin - typeOfChange", () => {
             ref: "master",
           },
           body:
-            "\\n- [X] Breaking change (fix/feature causing existing functionality to break)",
+            "\n- [X] Breaking change (fix/feature causing existing functionality to break)",
         },
       },
       // @ts-ignore
@@ -178,7 +178,7 @@ describe("LabelBotPlugin - typeOfChange", () => {
             ref: "master",
           },
           body:
-            "\\n- [X] Code quality improvements to existing code or addition of tests",
+            "\n- [X] Code quality improvements to existing code or addition of tests",
         },
       },
       // @ts-ignore
