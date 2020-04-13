@@ -74,6 +74,10 @@ const wrongTargetBranchDetected = async (
   const currentLabels = (pr.labels as WebhookPayloadIssuesIssue["labels"]).map(
     (label) => label.name
   );
+  if (currentLabels.includes("needs-rebase")) {
+    // If the label "needs-rebase" already exsist we can assume that this action has run, and we should ignore it.
+    return;
+  }
 
   context.log(NAME, `Adding ${labels} to PR`);
   promises.push(
@@ -96,16 +100,13 @@ const wrongTargetBranchDetected = async (
     `Adding comment to ${context.payload.pull_request.number}: ${body}`
   );
 
-  if (!currentLabels.includes("needs-rebase")) {
-    // If the label "needs-rebase" already exsist we can assume that this action has run, and we should ignore it.
-    promises.push(
-      context.github.issues.createComment(
-        context.issue({
-          body,
-        })
-      )
-    );
-  }
+  promises.push(
+    context.github.issues.createComment(
+      context.issue({
+        body,
+      })
+    )
+  );
 
   await Promise.all(promises);
 };
