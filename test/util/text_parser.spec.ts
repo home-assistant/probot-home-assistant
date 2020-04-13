@@ -1,6 +1,7 @@
 import * as assert from "assert";
 import {
   ParsedGitHubIssueOrPR,
+  extractTasks,
   extractPullRequestURLLinks,
   extractIssuesOrPullRequestMarkdownLinks,
 } from "../../src/util/text_parser";
@@ -60,5 +61,51 @@ describe("extractIssuesOrPullRequestMarkdownLinks", () => {
     assert.equal(linkDocs.owner, "home-assistant");
     assert.equal(linkDocs.repo, "home-assistant.io");
     assert.equal(linkDocs.number, 10052);
+  });
+});
+
+describe("extractTasks", () => {
+  const body = `
+    ## Type of change:
+
+    - [ ] Bugfix
+    - [ x] Dependecy upgrade
+    - [x] New feature
+    - [x ] New integration
+
+    ## Checklist
+
+    - [x] The code change is tested and works locally.
+
+  `;
+  it("Find tasks", () => {
+    const result = extractTasks(body);
+    assert.equal(result.length, 5);
+
+    const firstTask = result[0];
+    assert.equal(firstTask.checked, false);
+    assert.equal(firstTask.description, "Bugfix");
+  });
+  it("Find completed tasks", () => {
+    const result = extractTasks(body).filter((task) => {
+      return task.checked;
+    });
+    assert.equal(result.length, 4);
+
+    const firstTask = result[0];
+    assert.equal(firstTask.checked, true);
+    assert.equal(firstTask.description, "Dependecy upgrade");
+  });
+  it("Check that 'The code change is tested and works locally.' is completed", () => {
+    const result = extractTasks(body)
+      .filter((task) => {
+        return task.checked;
+      })
+      .map((task) => task.description);
+
+    assert.equal(
+      result.includes("The code change is tested and works locally."),
+      true
+    );
   });
 });
