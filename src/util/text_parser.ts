@@ -1,7 +1,11 @@
 import { GitHubAPI } from "probot/lib/github";
 import { fetchIssueWithCache } from "./issue";
 import { fetchPRWithCache } from "./pull_request";
-import { PullOrBodyTask } from "../types";
+
+interface PullOrBodyTask {
+  checked: boolean;
+  description: string;
+}
 
 export class ParsedGitHubIssueOrPR {
   public owner: string;
