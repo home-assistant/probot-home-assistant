@@ -88,16 +88,12 @@ export const extractTasks = (body: string) => {
   let tasks: PullOrBodyTask[] = [];
 
   body.split("\n").forEach((line: string) => {
-    let checked: boolean = false;
-    let description: string;
     if (!line.trim().startsWith("- [")) {
       return;
     }
 
-    if (matchChecked.test(line)) {
-      checked = true;
-    }
-    description = line
+    const checked: boolean = matchChecked.test(line);
+    const description: string = line
       .split(matchAll)
       [line.split(matchAll).length - 1].trim()
       .replace(/\\r/g, "");
