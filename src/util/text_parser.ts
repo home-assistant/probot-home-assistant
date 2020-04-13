@@ -92,10 +92,10 @@ export const extractTasks = (body: string) => {
       return;
     }
 
+    const lineSplit = line.split(matchAll);
     const checked: boolean = matchChecked.test(line);
-    const description: string = line
-      .split(matchAll)
-      [line.split(matchAll).length - 1].trim()
+    const description: string = lineSplit[lineSplit.length - 1]
+      .trim()
       .replace(/\\r/g, "");
     tasks.push({ checked, description });
   });
