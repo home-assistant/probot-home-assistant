@@ -1,5 +1,6 @@
-import { PRContext } from "../../types";
 import { Application } from "probot";
+import { WebhookPayloadIssuesIssue } from "@octokit/webhooks";
+import { PRContext } from "../../types";
 import { filterEventByRepo } from "../../util/filter_event_repo";
 import { filterEventNoBot } from "../../util/filter_event_no_bot";
 import {
@@ -12,6 +13,7 @@ import {
   extractIssuesOrPullRequestMarkdownLinks,
   extractPullRequestURLLinks,
 } from "../../util/text_parser";
+import { getIssueFromPayload } from "../../util/issue";
 
 const NAME = "DocsTargetBranch";
 const SKIP_REPOS = [REPO_BRANDS, REPO_DEV_DOCUMENTATION];
@@ -66,6 +68,16 @@ const wrongTargetBranchDetected = async (
     correctTargetBranch === "next"
       ? bodyShouldTargetNext
       : bodyShouldTargetCurrent;
+  const pr = getIssueFromPayload(context);
+
+  // Typing is wrong for PRs, so use labels type from issues
+  const currentLabels = (pr.labels as WebhookPayloadIssuesIssue["labels"]).map(
+    (label) => label.name
+  );
+  if (currentLabels.includes("needs-rebase")) {
+    // If the label "needs-rebase" already exsist we can assume that this action has run, and we should ignore it.
+    return;
+  }
 
   context.log(NAME, `Adding ${labels} to PR`);
   promises.push(

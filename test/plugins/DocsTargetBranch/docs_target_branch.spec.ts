@@ -9,17 +9,18 @@ describe("DocsTargetBranch", () => {
   it("The branch is correct (current)", async () => {
     let setLabels: any;
     let setAssignees: any;
-    let creteMessageBody: any;
 
     await runDocsTargetBranch({
       // @ts-ignore
       log: () => undefined,
+      name: "pull_request",
       payload: {
         pull_request: {
           // @ts-ignore
           base: {
             ref: "current",
           },
+          labels: [],
           body: "",
         },
         // @ts-ignore
@@ -53,17 +54,18 @@ describe("DocsTargetBranch", () => {
   it("The branch is correct (next)", async () => {
     let setLabels: any;
     let setAssignees: any;
-    let creteMessageBody: any;
 
     await runDocsTargetBranch({
       // @ts-ignore
       log: () => undefined,
+      name: "pull_request",
       payload: {
         pull_request: {
           // @ts-ignore
           base: {
             ref: "next",
           },
+          labels: [],
           body:
             "Link to parent pull request in the codebase: [1337](https://github.com/home-assistant/core/pull/1337)",
         },
@@ -103,12 +105,14 @@ describe("DocsTargetBranch", () => {
     await runDocsTargetBranch({
       // @ts-ignore
       log: () => undefined,
+      name: "pull_request",
       payload: {
         pull_request: {
           // @ts-ignore
           base: {
             ref: "next",
           },
+          labels: [],
           body: "",
         },
         // @ts-ignore
@@ -154,12 +158,14 @@ describe("DocsTargetBranch", () => {
     await runDocsTargetBranch({
       // @ts-ignore
       log: () => undefined,
+      name: "pull_request",
       payload: {
         pull_request: {
           // @ts-ignore
           base: {
             ref: "current",
           },
+          labels: [],
           body:
             "Link to parent pull request in the codebase: [1337](https://github.com/home-assistant/core/pull/1337)",
         },
@@ -196,6 +202,29 @@ describe("DocsTargetBranch", () => {
     });
     assert.deepEqual(creteMessageBody, {
       body: bodyShouldTargetNext,
+    });
+  });
+  it("Label 'needs-rebase' already exsist", async () => {
+    await runDocsTargetBranch({
+      // @ts-ignore
+      log: () => undefined,
+      name: "pull_request",
+      payload: {
+        pull_request: {
+          // @ts-ignore
+          base: {
+            ref: "current",
+          },
+          labels: ["needs-rebase"],
+        },
+        // @ts-ignore
+        sender: {
+          login: "developer",
+        },
+      },
+      // @ts-ignore
+      issue: (val) => val,
+      _prFiles: [],
     });
   });
 });
