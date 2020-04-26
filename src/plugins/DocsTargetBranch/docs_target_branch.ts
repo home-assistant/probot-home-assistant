@@ -14,6 +14,7 @@ import {
   extractPullRequestURLLinks,
 } from "../../util/text_parser";
 import { getIssueFromPayload } from "../../util/issue";
+import { scheduleComment } from "../../util/comment";
 
 const NAME = "DocsTargetBranch";
 const SKIP_REPOS = [REPO_BRANDS, REPO_DEV_DOCUMENTATION];
@@ -100,13 +101,7 @@ const wrongTargetBranchDetected = async (
     `Adding comment to ${context.payload.pull_request.number}: ${body}`
   );
 
-  promises.push(
-    context.github.issues.createComment(
-      context.issue({
-        body,
-      })
-    )
-  );
+  scheduleComment(context, "DocsTargetBranch", body);
 
   await Promise.all(promises);
 };

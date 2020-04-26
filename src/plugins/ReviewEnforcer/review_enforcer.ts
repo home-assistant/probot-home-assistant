@@ -9,13 +9,15 @@ import { filterEventNoBot } from "../../util/filter_event_no_bot";
 import { fetchPullRequestFilesFromContext } from "../../util/pull_request";
 import { ParsedPath } from "../../util/parse_path";
 import { ParsedDocsPath } from "../../util/parse_docs_path";
+import { scheduleComment } from "../../util/comment";
 
 const NAME = "ReviewEnforcer";
 
-const USERS = [
-];
+const USERS = [];
 
 const INTEGRATIONS = ["xiaomi_miio"];
+
+const commentBody = `This pull request needs to be manually signed off by @home-assistant/core before it can get merged.`;
 
 export const initReviewEnforcer = (app: Application) => {
   app.on("pull_request.opened", filterEventNoBot(NAME, runReviewEnforcer));
@@ -63,9 +65,5 @@ const checkPythonPRFiles = async (context: PRContext) => {
 };
 
 const markForReview = async (context: PRContext) => {
-  await context.github.issues.createComment(
-    context.issue({
-      body: `This pull request needs to be manually signed off by @home-assistant/core before it can get merged.`,
-    })
-  );
+  scheduleComment(context, "ReviewEnforcer", commentBody);
 };

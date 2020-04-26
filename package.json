@@ -14,6 +14,7 @@
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
+    "@types/debounce": "^1.2.0",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.6.8",
     "husky": "^3.0.1",
@@ -27,6 +28,7 @@
   "dependencies": {
     "@probot/serverless-lambda": "^0.3.0",
     "codeowners-utils": "^1.0.0",
+    "debounce": "^1.2.0",
     "ignore": "^5.1.2",
     "probot": "^9.2.19"
   },
