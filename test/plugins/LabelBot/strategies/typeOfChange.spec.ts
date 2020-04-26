@@ -31,7 +31,7 @@ describe("LabelBotPlugin - typeOfChange", () => {
       _prFiles: [],
     });
     assert.deepEqual(setLabels, {
-      labels: ["merging-to-master", "small-pr", "type: dependency"],
+      labels: ["merging-to-master", "small-pr", "dependency"],
     });
   });
   it("bugfix", async () => {
@@ -63,7 +63,7 @@ describe("LabelBotPlugin - typeOfChange", () => {
       _prFiles: [],
     });
     assert.deepEqual(setLabels, {
-      labels: ["merging-to-master", "small-pr", "type: bugfix"],
+      labels: ["merging-to-master", "small-pr", "bugfix"],
     });
   });
   it("New integration", async () => {
@@ -95,7 +95,7 @@ describe("LabelBotPlugin - typeOfChange", () => {
       _prFiles: [],
     });
     assert.deepEqual(setLabels, {
-      labels: ["merging-to-master", "small-pr", "type: new-integration"],
+      labels: ["merging-to-master", "small-pr", "new-integration"],
     });
   });
   it("New feature", async () => {
@@ -128,7 +128,7 @@ describe("LabelBotPlugin - typeOfChange", () => {
       _prFiles: [],
     });
     assert.deepEqual(setLabels, {
-      labels: ["merging-to-master", "small-pr", "type: new-feature"],
+      labels: ["merging-to-master", "small-pr", "new-feature"],
     });
   });
   it("Breaking change", async () => {
@@ -161,7 +161,7 @@ describe("LabelBotPlugin - typeOfChange", () => {
       _prFiles: [],
     });
     assert.deepEqual(setLabels, {
-      labels: ["merging-to-master", "small-pr", "type: breaking-change"],
+      labels: ["merging-to-master", "small-pr", "breaking-change"],
     });
   });
   it("Code quality", async () => {
@@ -194,7 +194,7 @@ describe("LabelBotPlugin - typeOfChange", () => {
       _prFiles: [],
     });
     assert.deepEqual(setLabels, {
-      labels: ["merging-to-master", "small-pr", "type: code-quality"],
+      labels: ["merging-to-master", "small-pr", "code-quality"],
     });
   });
 });
