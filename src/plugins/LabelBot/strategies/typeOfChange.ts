@@ -5,30 +5,30 @@ import { extractTasks } from "../../../util/text_parser";
 const BODYMATCHES = [
   {
     description: "Bugfix (non-breaking change which fixes an issue)",
-    labels: ["type: bugfix"],
+    labels: ["bugfix"],
   },
   {
     description: "Dependency upgrade",
-    labels: ["type: dependency"],
+    labels: ["dependency"],
   },
   {
     description: "New integration (thank you!)",
-    labels: ["type: new-integration"],
+    labels: ["new-integration"],
   },
   {
     description:
       "New feature (which adds functionality to an existing integration)",
-    labels: ["type: new-feature"],
+    labels: ["new-feature"],
   },
   {
     description:
       "Breaking change (fix/feature causing existing functionality to break)",
-    labels: ["type: breaking-change"],
+    labels: ["breaking-change"],
   },
   {
     description:
       "Code quality improvements to existing code or addition of tests",
-    labels: ["type: code-quality"],
+    labels: ["code-quality"],
   },
 ];
 
