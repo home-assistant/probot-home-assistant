@@ -3,8 +3,8 @@ import { LabeledIssueOrPRContext } from "../../types";
 import { Application } from "probot";
 import { REPO_CORE } from "../../const";
 import { filterEventByRepo } from "../../util/filter_event_repo";
-import { filterEventNoBot } from "../../util/filter_event_no_bot";
 import { getIssueFromPayload } from "../../util/issue";
+import { scheduleComment } from "../../util/comment";
 import { WebhookPayloadIssuesIssue } from "@octokit/webhooks";
 
 const NAME = "CodeOwnersMention";
@@ -97,9 +97,7 @@ export const runCodeOwnersMention = async (
       `Adding comment to ${triggerLabel} ${triggerURL}: ${commentBody}`
     );
 
-    promises.push(
-      context.github.issues.createComment(context.issue({ body: commentBody }))
-    );
+    scheduleComment(context, "CodeOwnersMention", commentBody);
   }
 
   // Add a label if author of issue/PR is a code owner

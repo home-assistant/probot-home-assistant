@@ -4,6 +4,7 @@ import {
   bodyShouldTargetCurrent,
   bodyShouldTargetNext,
 } from "../../../src/plugins/DocsTargetBranch/docs_target_branch";
+import { PRContext } from "../../../src/types";
 
 describe("DocsTargetBranch", () => {
   it("The branch is correct (current)", async () => {
@@ -100,9 +101,8 @@ describe("DocsTargetBranch", () => {
   it("Is next, should be current", async () => {
     let setLabels: any;
     let setAssignees: any;
-    let creteMessageBody: any;
 
-    await runDocsTargetBranch({
+    const context: Partial<PRContext> = {
       // @ts-ignore
       log: () => undefined,
       name: "pull_request",
@@ -132,30 +132,28 @@ describe("DocsTargetBranch", () => {
           async addAssignees(assignees) {
             setAssignees = assignees;
           },
-          // @ts-ignore
-          async createComment(body) {
-            creteMessageBody = body;
-          },
         },
       },
       _prFiles: [],
-    });
+    };
+    await runDocsTargetBranch(context as any);
     assert.deepEqual(setLabels, {
       labels: ["needs-rebase", "in-progress"],
     });
     assert.deepEqual(setAssignees, {
       assignees: ["developer"],
     });
-    assert.deepEqual(creteMessageBody, {
-      body: bodyShouldTargetCurrent,
-    });
+    assert.deepEqual(
+      (context as any)._commentsToPost[0].message,
+      bodyShouldTargetCurrent
+    );
   });
   it("Is current, should be next", async () => {
     let setLabels: any;
     let setAssignees: any;
-    let creteMessageBody: any;
+    let createMessageBody: any;
 
-    await runDocsTargetBranch({
+    const context: Partial<PRContext> = {
       // @ts-ignore
       log: () => undefined,
       name: "pull_request",
@@ -188,21 +186,23 @@ describe("DocsTargetBranch", () => {
           },
           // @ts-ignore
           async createComment(body) {
-            creteMessageBody = body;
+            createMessageBody = body;
           },
         },
       },
       _prFiles: [],
-    });
+    };
+    await runDocsTargetBranch(context as any);
     assert.deepEqual(setLabels, {
       labels: ["needs-rebase", "in-progress"],
     });
     assert.deepEqual(setAssignees, {
       assignees: ["developer"],
     });
-    assert.deepEqual(creteMessageBody, {
-      body: bodyShouldTargetNext,
-    });
+    assert.deepEqual(
+      (context as any)._commentsToPost[0].message,
+      bodyShouldTargetNext
+    );
   });
   it("Label 'needs-rebase' already exsist", async () => {
     await runDocsTargetBranch({
