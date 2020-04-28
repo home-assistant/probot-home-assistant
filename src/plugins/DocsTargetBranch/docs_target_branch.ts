@@ -48,12 +48,50 @@ export const runDocsTargetBranch = async (context: PRContext) => {
   if (links.length === 0) {
     if (target !== "current") {
       await wrongTargetBranchDetected(context, "current");
+    } else {
+      await correctTargetBranchDetected(context);
     }
     return;
   }
 
   if (target !== "next") {
     await wrongTargetBranchDetected(context, "next");
+  } else {
+    await correctTargetBranchDetected(context);
+  }
+};
+
+const correctTargetBranchDetected = async (context: PRContext) => {
+  const pr = getIssueFromPayload(context);
+  const author = context.payload.sender.login;
+  const promises: Promise<unknown>[] = [];
+  // Typing is wrong for PRs, so use labels type from issues
+  const currentLabels = (pr.labels as WebhookPayloadIssuesIssue["labels"]).map(
+    (label) => label.name
+  );
+  if (currentLabels.includes("needs-rebase")) {
+    promises.push(
+      context.github.issues.removeLabel(
+        // Bug in Probot: https://github.com/probot/probot/issues/917
+        // @ts-ignore
+        context.issue({
+          label: "needs-rebase",
+        })
+      )
+    );
+  }
+
+  // Typing is wrong for PRs, so use labels type from issues
+  const currentAssignees = (pr.assignees as WebhookPayloadIssuesIssue["assignees"]).map(
+    (assignee) => assignee.login
+  );
+  if (currentAssignees.includes(author)) {
+    context.log(NAME, `Removing ${author} as assignee`);
+    promises.push(
+      context.github.issues.removeAssignees(
+        context.issue({ assignee: [author] })
+      )
+    );
   }
 };
 
