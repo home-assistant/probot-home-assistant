@@ -24,9 +24,10 @@ const postComment = (context: PRContext | IssueContext) => {
   // Empty it, in case probot takes longer than 300ms and this runs again.
   patchedContext._commentsToPost = [];
 
-  const toPost = comments.map((comment) => {
-    `${comment.message} <sub><sup>(message by ${comment.handler})</sup></sub>`;
-  });
+  const toPost = comments.map(
+    (comment) =>
+      `${comment.message} <sub><sup>(message by ${comment.handler})</sup></sub>`
+  );
 
   let commentBody = toPost.join("\n\n---\n\n");
 
