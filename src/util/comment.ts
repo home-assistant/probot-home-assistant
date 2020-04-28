@@ -10,7 +10,7 @@ type PatchedContext = (PRContext | IssueContext) & {
   _commentsToPost?: Array<{ handler: string; message: string }>;
 };
 
-const WAIT_COMMENTS = 200; // ms
+const WAIT_COMMENTS = 500; // ms
 
 const postComment = (context: PRContext | IssueContext) => {
   const patchedContext = context as PatchedContext;
