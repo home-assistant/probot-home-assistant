@@ -26,7 +26,7 @@ const postComment = (context: PRContext | IssueContext) => {
 
   const toPost = comments.map(
     (comment) =>
-      `${comment.message} <sub><sup>(message by ${comment.handler})</sup></sub>`
+      `${comment.message}\n<sub><sup>(message by ${comment.handler})</sup></sub>`
   );
 
   let commentBody = toPost.join("\n\n---\n\n");
