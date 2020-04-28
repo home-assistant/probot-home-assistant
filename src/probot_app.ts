@@ -1,5 +1,6 @@
 import { Application, Context } from "probot";
 import { initLabelBot } from "./plugins/LabelBot/label_bot";
+import { initIssueLinks } from "./plugins/IssueLinks/issue_links";
 import { initCodeOwnersMention } from "./plugins/CodeOwnersMention/code_owners_mention";
 import { initReviewEnforcer } from "./plugins/ReviewEnforcer/review_enforcer";
 import { initDocsParenting } from "./plugins/DocsParenting/docs_parenting";
@@ -13,6 +14,7 @@ import { initDependencyBump } from "./plugins/DependencyBump/dependency_bump";
 export const probotApp = (app: Application) => {
   initLabelBot(app);
   initCodeOwnersMention(app);
+  initIssueLinks(app);
   initReviewEnforcer(app);
   initDocsParenting(app);
   initDocsTargetBranch(app);
