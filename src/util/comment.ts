@@ -5,25 +5,17 @@
  */
 import { debounce } from "debounce";
 import { PRContext, IssueContext } from "../types";
+import { scheduleChange } from "../changes";
 
 type PatchedContext = (PRContext | IssueContext) & {
   _commentsToPost?: Array<{ handler: string; message: string }>;
 };
 
-const WAIT_COMMENTS = 500; // ms
+let registered = false;
 
-const postComment = (context: PRContext | IssueContext) => {
+const postComment = async (context: PRContext | IssueContext) => {
   const patchedContext = context as PatchedContext;
   const comments = patchedContext._commentsToPost!;
-
-  // Can happen if race condition etc.
-  if (comments.length === 0) {
-    return;
-  }
-
-  // Empty it, in case probot takes longer than 300ms and this runs again.
-  patchedContext._commentsToPost = [];
-
   const toPost = comments.map(
     (comment) =>
       `${comment.message}\n<sub><sup>(message by ${comment.handler})</sup></sub>`
@@ -31,10 +23,10 @@ const postComment = (context: PRContext | IssueContext) => {
 
   let commentBody = toPost.join("\n\n---\n\n");
 
-  context.github.issues.createComment(context.issue({ body: commentBody }));
+  await context.github.issues.createComment(
+    context.issue({ body: commentBody })
+  );
 };
-
-const debouncedPostComment = debounce(postComment, WAIT_COMMENTS);
 
 export const scheduleComment = (
   context: PRContext | IssueContext,
@@ -46,5 +38,9 @@ export const scheduleComment = (
     patchedContext._commentsToPost = [];
   }
   patchedContext._commentsToPost.push({ handler, message });
-  debouncedPostComment(context);
+  if (registered) {
+    return;
+  }
+  registered = true;
+  scheduleChange(() => postComment(context));
 };
