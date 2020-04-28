@@ -21,6 +21,7 @@ describe("DocsTargetBranch", () => {
             ref: "current",
           },
           labels: [],
+          assignees: [],
           body: "",
         },
         // @ts-ignore
@@ -66,6 +67,7 @@ describe("DocsTargetBranch", () => {
             ref: "next",
           },
           labels: [],
+          assignees: [],
           body:
             "Link to parent pull request in the codebase: [1337](https://github.com/home-assistant/core/pull/1337)",
         },
@@ -113,6 +115,7 @@ describe("DocsTargetBranch", () => {
             ref: "next",
           },
           labels: [],
+          assignees: [],
           body: "",
         },
         // @ts-ignore
@@ -166,6 +169,7 @@ describe("DocsTargetBranch", () => {
             ref: "current",
           },
           labels: [],
+          assignees: [],
           body:
             "Link to parent pull request in the codebase: [1337](https://github.com/home-assistant/core/pull/1337)",
         },
@@ -216,6 +220,7 @@ describe("DocsTargetBranch", () => {
             ref: "current",
           },
           labels: ["needs-rebase"],
+          assignees: [],
         },
         // @ts-ignore
         sender: {
