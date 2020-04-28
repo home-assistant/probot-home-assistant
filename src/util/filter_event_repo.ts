@@ -28,9 +28,7 @@ export const filterEventByRepo = <T>(
     const repo = extractRepoFromContext(context);
 
     if (!repo) {
-      context.log(
-        `Not running event for ${name} because it has no repository.`
-      );
+      context.log(name, `Skipping event because it has no repository.`);
       return;
     }
 
@@ -38,7 +36,8 @@ export const filterEventByRepo = <T>(
 
     if (repoName !== filterRepository) {
       context.log(
-        `Not running event for ${name} because repository ${repoName} does not match ${filterRepository}.`
+        name,
+        `Skipping event because repository ${repoName} does not match ${filterRepository}.`
       );
       return;
     }

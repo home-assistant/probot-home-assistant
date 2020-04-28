@@ -38,9 +38,7 @@ export const runCodeOwnersMention = async (
   const str = Buffer.from(codeownersData.data.content, "base64").toString();
 
   if (str.indexOf(integrationName) === -1) {
-    context.log(
-      `Integration ${integrationName} not in CODEOWNERS, exiting during processing of ${triggerURL}`
-    );
+    context.log(NAME, `Integration ${integrationName} not in CODEOWNERS`);
     return;
   }
 
@@ -48,9 +46,7 @@ export const runCodeOwnersMention = async (
   const match = codeownersUtils.matchFile(path, entries);
 
   if (!match) {
-    context.log(
-      `No match found in CODEOWNERS for ${path}, exiting during processing of ${triggerURL}`
-    );
+    context.log(NAME, `No match found in CODEOWNERS for ${path}`);
     return;
   }
 
@@ -94,6 +90,7 @@ export const runCodeOwnersMention = async (
     )}, mind taking a look at this ${triggerLabel} as its been labeled with a integration (\`${integrationName}\`) you are listed as a [codeowner](${codeownersLine}) for? Thanks!`;
 
     context.log(
+      NAME,
       `Adding comment to ${triggerLabel} ${triggerURL}: ${commentBody}`
     );
 

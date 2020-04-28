@@ -8,7 +8,7 @@ provider:
   timeout: 10
   memorySize: 192
   stage: ${opt:stage, 'dev'}
-  runtime: nodejs10.x
+  runtime: nodejs12.x
 
 functions:
   handleProbot:
