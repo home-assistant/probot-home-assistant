@@ -89,7 +89,7 @@ const correctTargetBranchDetected = async (context: PRContext) => {
     context.log(NAME, `Removing ${author} as assignee`);
     promises.push(
       context.github.issues.removeAssignees(
-        context.issue({ assignee: [author] })
+        context.issue({ assignees: [author] })
       )
     );
   }
