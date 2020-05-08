@@ -52,7 +52,7 @@ export const runCodeOwnersMention = async (
 
   const owners = match.owners.map(
     // Remove the `@`
-    (usr) => usr.substring(1)
+    (usr) => usr.substring(1).toLowerCase()
   );
 
   const codeownersLine = `${codeownersData.data.html_url}#L${match.line}`;
@@ -69,7 +69,7 @@ export const runCodeOwnersMention = async (
     commenter.user.login.toLowerCase()
   );
 
-  const payloadUsername = triggerIssue.user.login;
+  const payloadUsername = triggerIssue.user.login.toLowerCase();
   const ownersMinusAuthor = owners.filter((usr) => usr !== payloadUsername);
 
   const promises: Promise<unknown>[] = [
