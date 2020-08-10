@@ -8,7 +8,6 @@ import { initDocsTargetBranch } from "./plugins/DocsTargetBranch/docs_target_bra
 import { initLabelCleaner } from "./plugins/LabelCleaner/label_cleaner";
 import { initDocsBranchLabels } from "./plugins/DocsBranchLabels/docs_branch_labels";
 import { initDocsMissing } from "./plugins/DocsMissing/docs_missing";
-import { initHacktoberfest } from "./plugins/Hacktoberfest/hacktoberfest";
 import { initDependencyBump } from "./plugins/DependencyBump/dependency_bump";
 
 export const probotApp = (app: Application) => {
@@ -21,6 +20,5 @@ export const probotApp = (app: Application) => {
   initLabelCleaner(app);
   initDocsBranchLabels(app);
   initDocsMissing(app);
-  initHacktoberfest(app);
   initDependencyBump(app);
 };
