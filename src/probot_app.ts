@@ -21,6 +21,6 @@ export const probotApp = (app: Application) => {
   initLabelCleaner(app);
   initDocsBranchLabels(app);
   initDocsMissing(app);
-  initHacktoberfest(app);
+  //initHacktoberfest(app);
   initDependencyBump(app);
 };
