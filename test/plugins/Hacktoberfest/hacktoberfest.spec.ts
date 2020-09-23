@@ -9,12 +9,12 @@ import {
 describe("Hacktoberfest", () => {
   describe("Check live", () => {
     it("Hacktoberfest is live", async () => {
-      const clock = sinon.useFakeTimers(new Date(2020, 9, 1).getTime());
+      const clock = sinon.useFakeTimers(new Date(2020, 10, 1).getTime());
       assert.strictEqual(isHacktoberfestLive(), true);
       clock.restore();
     });
     it("Hacktoberfest is not live", async () => {
-      const clock = sinon.useFakeTimers(new Date(2020, 8, 1).getTime());
+      const clock = sinon.useFakeTimers(new Date(2020, 9, 1).getTime());
       assert.strictEqual(isHacktoberfestLive(), false);
       clock.restore();
     });
