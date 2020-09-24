@@ -7,7 +7,7 @@ import { WebhookPayloadIssuesIssue } from "@octokit/webhooks";
 
 const NAME = "Hacktoberfest";
 
-export const isHacktoberfestLive = () => new Date().getMonth() == 10;
+export const isHacktoberfestLive = () => new Date().getMonth() == 9;
 
 export const initHacktoberfest = (app: Application) => {
   if (isHacktoberfestLive()) {
