@@ -7,7 +7,7 @@ import { WebhookPayloadIssuesIssue } from "@octokit/webhooks";
 
 const NAME = "Hacktoberfest";
 
-const isHacktoberfestLive = () => new Date().getMonth() == 9;
+export const isHacktoberfestLive = () => new Date().getMonth() == 9;
 
 export const initHacktoberfest = (app: Application) => {
   if (isHacktoberfestLive()) {
@@ -16,14 +16,14 @@ export const initHacktoberfest = (app: Application) => {
   app.on(["pull_request.closed"], runHacktoberfestClosedPR);
 };
 
-const runHacktoberfestNewPR = async (context: PRContext) => {
+export const runHacktoberfestNewPR = async (context: PRContext) => {
   await context.github.issues.addLabels({
     ...context.issue(),
     labels: ["Hacktoberfest"],
   });
 };
 
-const runHacktoberfestClosedPR = async (context: PRContext) => {
+export const runHacktoberfestClosedPR = async (context: PRContext) => {
   const pr = context.payload.pull_request;
 
   // Don't do something if the PR got merged or if it had no Hacktoberfest label.
