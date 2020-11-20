@@ -1,11 +1,11 @@
 import * as assert from "assert";
-import { runLabelBot } from "../../../src/plugins/LabelBot/label_bot";
+import { runLabelBotPull } from "../../../src/plugins/LabelBot/label_bot";
 
 describe("LabelBotPlugin", () => {
   it("works", async () => {
     let setLabels: any;
 
-    await runLabelBot({
+    await runLabelBotPull({
       // @ts-ignore
       log: () => undefined,
       payload: {

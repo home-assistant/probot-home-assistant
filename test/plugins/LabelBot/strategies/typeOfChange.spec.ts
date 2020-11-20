@@ -1,11 +1,11 @@
 import * as assert from "assert";
-import { runLabelBot } from "../../../../src/plugins/LabelBot/label_bot";
+import { runLabelBotPull } from "../../../../src/plugins/LabelBot/label_bot";
 
 describe("LabelBotPlugin - typeOfChange", () => {
   it("dependency", async () => {
     let setLabels: any;
 
-    await runLabelBot({
+    await runLabelBotPull({
       // @ts-ignore
       log: () => undefined,
       payload: {
@@ -37,7 +37,7 @@ describe("LabelBotPlugin - typeOfChange", () => {
   it("bugfix", async () => {
     let setLabels: any;
 
-    await runLabelBot({
+    await runLabelBotPull({
       // @ts-ignore
       log: () => undefined,
       payload: {
@@ -69,7 +69,7 @@ describe("LabelBotPlugin - typeOfChange", () => {
   it("New integration", async () => {
     let setLabels: any;
 
-    await runLabelBot({
+    await runLabelBotPull({
       // @ts-ignore
       log: () => undefined,
       payload: {
@@ -101,7 +101,7 @@ describe("LabelBotPlugin - typeOfChange", () => {
   it("New feature", async () => {
     let setLabels: any;
 
-    await runLabelBot({
+    await runLabelBotPull({
       // @ts-ignore
       log: () => undefined,
       payload: {
@@ -134,7 +134,7 @@ describe("LabelBotPlugin - typeOfChange", () => {
   it("Breaking change", async () => {
     let setLabels: any;
 
-    await runLabelBot({
+    await runLabelBotPull({
       // @ts-ignore
       log: () => undefined,
       payload: {
@@ -167,7 +167,7 @@ describe("LabelBotPlugin - typeOfChange", () => {
   it("Code quality", async () => {
     let setLabels: any;
 
-    await runLabelBot({
+    await runLabelBotPull({
       // @ts-ignore
       log: () => undefined,
       payload: {

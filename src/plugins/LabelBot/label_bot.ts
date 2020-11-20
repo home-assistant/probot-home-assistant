@@ -4,6 +4,7 @@ import { fetchPullRequestFilesFromContext } from "../../util/pull_request";
 // Convert a list of file paths to labels to set
 
 import componentAndPlatform from "./strategies/componentAndPlatform";
+import integrationFromDocLink from "./strategies/integrationFromDocLink";
 import newIntegrationOrPlatform from "./strategies/newIntegrationOrPlatform";
 import removePlatform from "./strategies/removePlatform";
 import warnOnMergeToMaster from "./strategies/warnOnMergeToMaster";
@@ -11,7 +12,7 @@ import markCore from "./strategies/markCore";
 import smallPR from "./strategies/smallPR";
 import hasTests from "./strategies/hasTests";
 import typeOfChange from "./strategies/typeOfChange";
-import { PRContext } from "../../types";
+import { IssueContext, PRContext } from "../../types";
 import { Application } from "probot";
 import { filterEventByRepo } from "../../util/filter_event_repo";
 import { filterEventNoBot } from "../../util/filter_event_no_bot";
@@ -19,7 +20,7 @@ import { REPO_CORE } from "../../const";
 
 const NAME = "LabelBot";
 
-const STRATEGIES = [
+const PULL_STRATEGIES = [
   componentAndPlatform,
   newIntegrationOrPlatform,
   removePlatform,
@@ -30,30 +31,53 @@ const STRATEGIES = [
   typeOfChange,
 ];
 
+const ISSUE_STRATEGIES = [integrationFromDocLink];
+
 export const initLabelBot = (app: Application) => {
   app.on(
     "pull_request.opened",
-    filterEventNoBot(NAME, filterEventByRepo(NAME, REPO_CORE, runLabelBot))
+    filterEventNoBot(NAME, filterEventByRepo(NAME, REPO_CORE, runLabelBotPull))
   );
 
-  // app.on("issues.edited", async (context: PRContext) => {
-  //   // This is also for PRs
-  //   // context.log("Edited", context.event);
-  // });
+  app.on(
+    "issues.opened",
+    filterEventNoBot(NAME, filterEventByRepo(NAME, REPO_CORE, runLabelBotPull))
+  );
 };
 
-export const runLabelBot = async (context: PRContext) => {
+export const runLabelBotPull = async (context: PRContext) => {
   const files = await fetchPullRequestFilesFromContext(context);
   const parsed = files.map((file) => new ParsedPath(file));
-  const labelSet = new Set();
+  const labelSet: Set<string> = new Set();
 
-  STRATEGIES.forEach((strategy) => {
+  PULL_STRATEGIES.forEach((strategy) => {
     for (let label of strategy(context, parsed)) {
       labelSet.add(label);
     }
   });
 
+  await handleNewLabels(context, context.payload.pull_request.number, labelSet);
+};
+
+export const runLabelBotIssue = async (context: IssueContext) => {
+  const labelSet: Set<string> = new Set();
+
+  ISSUE_STRATEGIES.forEach(async (strategy) => {
+    for await (let label of await strategy(context)) {
+      labelSet.add(label);
+    }
+  });
+
+  await handleNewLabels(context, context.payload.issue.number, labelSet);
+};
+
+const handleNewLabels = async (
+  context: PRContext | IssueContext,
+  issue_number: number,
+  labelSet?: Set<string>
+) => {
   const labels = Array.from(labelSet);
+  const issueContext = context.issue();
 
   if (labels.length === 0 || labels.length > 9) {
     context.log(
@@ -63,9 +87,7 @@ export const runLabelBot = async (context: PRContext) => {
   }
 
   context.log(
-    `LabelBot: Setting labels on PR ${
-      context.payload.pull_request.number
-    }: ${labels.join(", ")}`
+    `LabelBot: Setting labels on # ${issue_number}: ${labels.join(", ")}`
   );
 
   await context.github.issues.addLabels(
