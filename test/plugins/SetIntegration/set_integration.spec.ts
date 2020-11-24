@@ -51,6 +51,6 @@ describe(NAME, () => {
         },
       },
     });
-    assert.strict(setLabels, []);
+    assert.deepStrictEqual(setLabels, []);
   });
 });
