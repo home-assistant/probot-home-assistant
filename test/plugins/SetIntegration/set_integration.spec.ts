@@ -34,7 +34,7 @@ describe(NAME, () => {
     setLabels = [];
   });
 
-  it("Valid integration docLink", async () => {
+  it("Integration label does exsist", async () => {
     await runSetIntegration({
       ...mockContext,
       payload: {
@@ -48,7 +48,20 @@ describe(NAME, () => {
     assert.deepStrictEqual(setLabels, { labels: ["integration: awesome"] });
   });
 
-  it("Valid integration docLink with underscore", async () => {
+  it("Integration label does not exsist", async () => {
+    await runSetIntegration({
+      ...mockContext,
+      payload: {
+        issue: {
+          body:
+            "Link to integration documentation on our website: https://www.home-assistant.io/integrations/not_valid",
+        },
+      },
+    });
+    assert.deepStrictEqual(setLabels, []);
+  });
+
+  it("Integration with underscore", async () => {
     await runSetIntegration({
       ...mockContext,
       payload: {
@@ -62,17 +75,5 @@ describe(NAME, () => {
     assert.deepStrictEqual(setLabels, {
       labels: ["integration: awesome_integration"],
     });
-  });
-
-  it("Not valid integration docLink", async () => {
-    await runSetIntegration({
-      ...mockContext,
-      payload: {
-        issue: {
-          body: "https://www.home-assistant.io/integrations/not_valid",
-        },
-      },
-    });
-    assert.deepStrictEqual(setLabels, []);
   });
 });
