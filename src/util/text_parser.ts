@@ -110,7 +110,7 @@ export const extractTasks = (body: string) => {
 export const extractIntegrationDocumentationLinks = (
   body: string
 ): IntegrationDocumentationLink[] => {
-  const re = /https:\/\/(w{3}.|rc.|next.|)home-assistant.io\/integrations\/(\w+)/g;
+  const re = /https:\/\/(www.|rc.|next.|)home-assistant.io\/integrations\/(\w+)/g;
   let match;
   let results: IntegrationDocumentationLink[] = [];
 
