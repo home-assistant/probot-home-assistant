@@ -10,6 +10,7 @@ import { initDocsBranchLabels } from "./plugins/DocsBranchLabels/docs_branch_lab
 import { initDocsMissing } from "./plugins/DocsMissing/docs_missing";
 import { initHacktoberfest } from "./plugins/Hacktoberfest/hacktoberfest";
 import { initDependencyBump } from "./plugins/DependencyBump/dependency_bump";
+import { initSetIntegration } from "./plugins/SetIntegration/set_integration";
 
 export const probotApp = (app: Application) => {
   initLabelBot(app);
@@ -23,4 +24,5 @@ export const probotApp = (app: Application) => {
   initDocsMissing(app);
   initHacktoberfest(app);
   initDependencyBump(app);
+  initSetIntegration(app);
 };
