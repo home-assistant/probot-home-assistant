@@ -7,6 +7,11 @@ interface PullOrBodyTask {
   description: string;
 }
 
+interface IntegrationDocumentationLink {
+  link: string;
+  integration: string;
+}
+
 export class ParsedGitHubIssueOrPR {
   public owner: string;
   public repo: string;
@@ -100,4 +105,21 @@ export const extractTasks = (body: string) => {
     tasks.push({ checked, description });
   });
   return tasks;
+};
+
+export const extractIntegrationDocumentationLinks = (
+  body: string
+): IntegrationDocumentationLink[] => {
+  const re = /https:\/\/(www.|rc.|next.|)home-assistant.io\/integrations\/(\w+)/g;
+  let match;
+  let results: IntegrationDocumentationLink[] = [];
+
+  do {
+    match = re.exec(body);
+    if (match) {
+      results.push({ link: match, integration: match[2] });
+    }
+  } while (match);
+
+  return results;
 };
