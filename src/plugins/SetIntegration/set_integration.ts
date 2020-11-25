@@ -18,15 +18,21 @@ export const initSetIntegration = (app: Application) => {
 };
 
 export const runSetIntegration = async (context: IssueContext) => {
-  const currentLabels = (await context.github.issues.listLabelsForRepo(
-    context.issue()
-  )).data.map((label) => label.name);
-
-  const labels = extractIntegrationDocumentationLinks(
+  const foundLinks = extractIntegrationDocumentationLinks(
     context.payload.issue.body
-  )
-    .map((link) => `integration: ${link.integration}`)
-    .filter((label) => currentLabels.includes(label));
+  );
+
+  let labels = (await Promise.all(
+    foundLinks.map(async (link) => {
+      const label = `integration: ${link.integration}`;
+      const exist = await context.github.issues.getLabel(
+        context.issue({ name: label })
+      );
+      if (exist.status === 200 && exist.data.name === label) {
+        return label;
+      }
+    })
+  )).filter(Boolean);
 
   if (labels.length === 0) {
     return;
