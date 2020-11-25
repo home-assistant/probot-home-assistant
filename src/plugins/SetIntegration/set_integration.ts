@@ -32,7 +32,7 @@ export const runSetIntegration = async (context: IssueContext) => {
         return label;
       }
     })
-  )).filter((label) => label !== undefined);
+  )).filter(Boolean);
 
   if (labels.length === 0) {
     return;
