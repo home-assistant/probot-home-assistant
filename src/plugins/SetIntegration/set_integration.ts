@@ -25,10 +25,10 @@ export const runSetIntegration = async (context: IssueContext) => {
 
   for (const link of foundLinks) {
     const label = `integration: ${link.integration}`;
-    const exsist = await context.github.issues.getLabel(
+    const exist = await context.github.issues.getLabel(
       context.issue({ name: label })
     );
-    if (exsist.status === 200 && exsist.data.name === label) {
+    if (exist.status === 200 && exist.data.name === label) {
       labels.push(label);
     }
   }
