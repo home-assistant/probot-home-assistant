@@ -30,7 +30,7 @@ export const runSetIntegration = async (context: IssueContext) => {
     foundLinks.map(async (link) => {
       const label = `integration: ${link.integration}`;
       const exist = await context.github.issues.getLabel(
-        context.issue({ name: label })
+        context.issue({ name: label, repo: REPO_CORE })
       );
       if (exist.status === 200 && exist.data.name === label) {
         return label;
