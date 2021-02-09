@@ -12,6 +12,7 @@ describe(NAME, () => {
   const mockContext = {
     log: () => undefined,
     payload: {
+      repository: { name: "core" },
       issue: {
         body: issueBody,
       },

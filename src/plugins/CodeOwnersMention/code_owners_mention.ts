@@ -1,24 +1,31 @@
 const codeownersUtils = require("codeowners-utils");
 import { LabeledIssueOrPRContext } from "../../types";
 import { Application } from "probot";
-import { REPO_CORE } from "../../const";
-import { filterEventByRepo } from "../../util/filter_event_repo";
+import { REPO_CORE, REPO_HOME_ASSISTANT_IO } from "../../const";
+import { extractRepoFromContext } from "../../util/filter_event_repo";
 import { getIssueFromPayload } from "../../util/issue";
 import { scheduleComment } from "../../util/comment";
 import { WebhookPayloadIssuesIssue } from "@octokit/webhooks";
 
 const NAME = "CodeOwnersMention";
+const activeRepositories = [REPO_CORE, REPO_HOME_ASSISTANT_IO];
 
 export const initCodeOwnersMention = (app: Application) => {
-  app.on(
-    ["issues.labeled", "pull_request.labeled"],
-    filterEventByRepo(NAME, REPO_CORE, runCodeOwnersMention)
-  );
+  app.on(["issues.labeled", "pull_request.labeled"], runCodeOwnersMention);
 };
 
 export const runCodeOwnersMention = async (
   context: LabeledIssueOrPRContext
 ) => {
+  const repository = extractRepoFromContext(context);
+  if (!activeRepositories.includes(repository)) {
+    context.log(
+      NAME,
+      `Skipping event because repository ${repository} does not match ${activeRepositories}.`
+    );
+    return;
+  }
+
   const labelName = context.payload.label.name;
   const triggerIssue = getIssueFromPayload(context);
   const triggerURL = triggerIssue.html_url;
@@ -33,7 +40,10 @@ export const runCodeOwnersMention = async (
 
   const integrationName = labelName.split("integration: ")[1];
 
-  const path = `homeassistant/components/${integrationName}/*`;
+  const path =
+    repository === REPO_CORE
+      ? `homeassistant/components/${integrationName}/*`
+      : `source/_integrations/${integrationName}.markdown`;
 
   const str = Buffer.from(codeownersData.data.content, "base64").toString();
 
@@ -84,7 +94,12 @@ export const runCodeOwnersMention = async (
     .map((usr) => `@${usr}`);
 
   if (mentions.length > 0) {
-    const triggerLabel = context.name === "issues" ? "issue" : "pull request";
+    const triggerLabel =
+      repository === REPO_CORE
+        ? context.name === "issues"
+          ? "issue"
+          : "pull request"
+        : "feedback";
     const commentBody = `Hey there ${mentions.join(
       ", "
     )}, mind taking a look at this ${triggerLabel} as its been labeled with an integration (\`${integrationName}\`) you are listed as a [codeowner](${codeownersLine}) for? Thanks!`;
