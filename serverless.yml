@@ -13,6 +13,9 @@ provider:
 functions:
   handleProbot:
     handler: dist/serverless_handler.probot
+    exclude:
+      - node_modules/**
+      - .devcontainer/**
     events:
       - http: POST github_probot_webhook
     environment:
