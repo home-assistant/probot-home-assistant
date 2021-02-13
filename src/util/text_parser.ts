@@ -137,5 +137,5 @@ export const extractDocumentationSectionsLinks = (body: string): string[] => {
     }
   } while (match);
 
-  return results;
+  return [...new Set(results)];
 };

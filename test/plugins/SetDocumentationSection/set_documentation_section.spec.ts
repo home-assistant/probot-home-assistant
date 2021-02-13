@@ -43,6 +43,16 @@ describe(NAME, () => {
     assert.deepStrictEqual(setLabels, { labels: ["configuration"] });
   });
 
+  it("Section label does exsist only once", async () => {
+    mockContext.payload.issue.body = `
+    Link: https://www.home-assistant.io/getting-started/configuration/
+    Link: https://www.home-assistant.io/getting-started/configuration/
+    `;
+    getLabelResponse = { status: 200, data: { name: "configuration" } };
+    await runSetDocumentationSection(mockContext);
+    assert.deepStrictEqual(setLabels, { labels: ["configuration"] });
+  });
+
   it("Section label does not exsist", async () => {
     mockContext.payload.issue.body =
       "Link: https://www.home-assistant.io/getting-started/configuration/";
