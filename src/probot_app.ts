@@ -11,6 +11,7 @@ import { initDocsMissing } from "./plugins/DocsMissing/docs_missing";
 import { initHacktoberfest } from "./plugins/Hacktoberfest/hacktoberfest";
 import { initDependencyBump } from "./plugins/DependencyBump/dependency_bump";
 import { initSetIntegration } from "./plugins/SetIntegration/set_integration";
+import { initSetDocumentationSection } from "./plugins/SetDocumentationSection/set_documentation_section";
 
 export const probotApp = (app: Application) => {
   initLabelBot(app);
@@ -25,4 +26,5 @@ export const probotApp = (app: Application) => {
   initHacktoberfest(app);
   initDependencyBump(app);
   initSetIntegration(app);
+  initSetDocumentationSection(app);
 };
