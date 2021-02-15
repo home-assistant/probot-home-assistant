@@ -37,7 +37,7 @@ export const runSetDocumentationSection = async (context: IssueContext) => {
         const exist = await context.github.issues.getLabel(
           context.issue({ name: section })
         );
-        if (exist.status === 200 && exist.data.name === section) {
+        if (exist.data.name === section) {
           return section;
         }
       } catch (err) {
