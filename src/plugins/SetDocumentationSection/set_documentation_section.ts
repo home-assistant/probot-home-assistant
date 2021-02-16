@@ -33,11 +33,15 @@ export const runSetDocumentationSection = async (context: IssueContext) => {
 
   let labels = (await Promise.all(
     foundSections.map(async (section) => {
-      const exist = await context.github.issues.getLabel(
-        context.issue({ name: section })
-      );
-      if (exist.status === 200 && exist.data.name === section) {
-        return section;
+      try {
+        const exist = await context.github.issues.getLabel(
+          context.issue({ name: section })
+        );
+        if (exist.data.name === section) {
+          return section;
+        }
+      } catch (err) {
+        context.log(err);
       }
     })
   )).filter(Boolean);
