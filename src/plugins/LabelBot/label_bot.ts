@@ -20,7 +20,6 @@ import { REPO_CORE } from "../../const";
 const NAME = "LabelBot";
 
 const STRATEGIES = [
-  componentAndPlatform,
   newIntegrationOrPlatform,
   removePlatform,
   warnOnMergeToMaster,
@@ -52,6 +51,16 @@ export const runLabelBot = async (context: PRContext) => {
       labelSet.add(label);
     }
   });
+
+  // componentAndPlatform can create many labels, process them separately
+  const componentLabelSet = new Set();
+  for (let label of componentAndPlatform(context, parsed)) {
+    componentLabelSet.add(label);
+  }
+
+  if (labelSet.size + componentLabelSet.size <= 9) {
+    componentLabelSet.forEach(labelSet.add, labelSet);
+  }
 
   const labels = Array.from(labelSet);
 
