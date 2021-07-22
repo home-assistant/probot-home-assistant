@@ -5,6 +5,7 @@ import {
   bodyShouldTargetNext,
 } from "../../../src/plugins/DocsTargetBranch/docs_target_branch";
 import { PRContext } from "../../../src/types";
+import { COMMENT_DEBOUNCE_TIME } from "../../../src/const";
 
 const sleep = (duration) => new Promise(resolve => setTimeout(resolve, duration));
 
@@ -147,7 +148,7 @@ describe("DocsTargetBranch", () => {
       _prFiles: [],
     };
     await runDocsTargetBranch(context as any);
-    await sleep(1000); // wait for comment debouncing
+    await sleep(COMMENT_DEBOUNCE_TIME + 50); // wait for comment debouncing to run
     assert.deepEqual(setLabels, {
       labels: ["needs-rebase", "in-progress"],
     });
@@ -202,7 +203,7 @@ describe("DocsTargetBranch", () => {
       _prFiles: [],
     };
     await runDocsTargetBranch(context as any);
-    await sleep(1000); // wait for comment debouncing
+    await sleep(COMMENT_DEBOUNCE_TIME + 50); // wait for comment debouncing to run
     assert.deepEqual(setLabels, {
       labels: ["needs-rebase", "in-progress"],
     });
