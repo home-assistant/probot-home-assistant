@@ -4,27 +4,25 @@
  * We debounce it so that we only leave 1 comment with all notices.
  */
 import { debounce } from "debounce";
+import { COMMENT_DEBOUNCE_TIME } from "../const";
 import { PRContext, IssueContext } from "../types";
+import { getIssueFromPayload } from "./issue";
 
-type PatchedContext = (PRContext | IssueContext) & {
-  _commentsToPost?: Array<{ handler: string; message: string }>;
-};
+type PendingComment = {
+  debouncedPost: Function,
+  context: PRContext | IssueContext,
+  comments: Array<{ handler: string, message: string }>;
+}
 
-const WAIT_COMMENTS = 500; // ms
+const pendingComments = new Map<string, PendingComment>();
 
-const postComment = (context: PRContext | IssueContext) => {
-  const patchedContext = context as PatchedContext;
-  const comments = patchedContext._commentsToPost!;
+const postComment = (key: string) => {
+  const pendingComment = pendingComments.get(key);
+  pendingComments.delete(key);
 
-  // Can happen if race condition etc.
-  if (comments.length === 0) {
-    return;
-  }
+  const context = pendingComment.context;
 
-  // Empty it, in case probot takes longer than 300ms and this runs again.
-  patchedContext._commentsToPost = [];
-
-  const toPost = comments.map(
+  const toPost = pendingComment.comments.map(
     (comment) =>
       `${comment.message}\n<sub><sup>(message by ${comment.handler})</sup></sub>`
   );
@@ -34,17 +32,21 @@ const postComment = (context: PRContext | IssueContext) => {
   context.github.issues.createComment(context.issue({ body: commentBody }));
 };
 
-const debouncedPostComment = debounce(postComment, WAIT_COMMENTS);
-
 export const scheduleComment = (
   context: PRContext | IssueContext,
   handler: string,
   message: string
 ) => {
-  const patchedContext = context as PatchedContext;
-  if (!("_commentsToPost" in patchedContext)) {
-    patchedContext._commentsToPost = [];
+  const key = getIssueFromPayload(context).url;
+  if (!pendingComments.has(key)) {
+    pendingComments.set(key, {
+      debouncedPost: debounce(() => postComment(key), COMMENT_DEBOUNCE_TIME),
+      context,
+      comments: []
+    });
   }
-  patchedContext._commentsToPost.push({ handler, message });
-  debouncedPostComment(context);
+
+  const pendingComment = pendingComments.get(key);
+  pendingComment.comments.push({ handler, message });
+  pendingComment.debouncedPost();
 };

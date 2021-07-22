@@ -4,6 +4,8 @@ export const REPO_CORE = "core";
 export const REPO_DEV_DOCUMENTATION = "developers.home-assistant";
 export const REPO_HOME_ASSISTANT_IO = "home-assistant.io";
 
+export const COMMENT_DEBOUNCE_TIME = 500;
+
 export const entityComponents = [
   "air_quality",
   "alarm_control_panel",
