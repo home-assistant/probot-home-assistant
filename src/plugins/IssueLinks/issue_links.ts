@@ -24,5 +24,5 @@ export const runIssueLinks = async (context: LabeledIssueOrPRContext) => {
   const commentBody = `[${integrationName} documentation](${docLink})\n[${integrationName} source](${codeLink})`;
 
   context.log(NAME, `Adding comment with links ${commentBody}`);
-  scheduleComment(context, "IssueLinks", commentBody);
+  await scheduleComment(context, "IssueLinks", commentBody);
 };

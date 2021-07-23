@@ -139,7 +139,7 @@ const wrongTargetBranchDetected = async (
     `Adding comment to ${context.payload.pull_request.number}: ${body}`
   );
 
-  scheduleComment(context, "DocsTargetBranch", body);
+  promises.push(scheduleComment(context, "DocsTargetBranch", body));
 
   await Promise.all(promises);
 };

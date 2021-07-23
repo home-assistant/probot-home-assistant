@@ -3,10 +3,10 @@
  *
  * We debounce it so that we only leave 1 comment with all notices.
  */
-import { debounce } from "debounce";
 import { COMMENT_DEBOUNCE_TIME } from "../const";
 import { PRContext, IssueContext } from "../types";
 import { getIssueFromPayload } from "./issue";
+import { debounce } from "./debounce";
 
 type PendingComment = {
   debouncedPost: Function,
@@ -16,7 +16,7 @@ type PendingComment = {
 
 const pendingComments = new Map<string, PendingComment>();
 
-const postComment = (key: string) => {
+const postComment = async (key: string) => {
   const pendingComment = pendingComments.get(key);
   pendingComments.delete(key);
 
@@ -34,10 +34,10 @@ const postComment = (key: string) => {
 
   const commentBody = toPost.join("\n\n---\n\n");
 
-  context.github.issues.createComment(context.issue({ body: commentBody }));
+  await context.github.issues.createComment(context.issue({ body: commentBody }));
 };
 
-export const scheduleComment = (
+export const scheduleComment = async (
   context: PRContext | IssueContext,
   handler: string,
   message: string
@@ -53,5 +53,5 @@ export const scheduleComment = (
 
   const pendingComment = pendingComments.get(key);
   pendingComment.comments.push({ handler, message });
-  pendingComment.debouncedPost();
+  await pendingComment.debouncedPost();
 };
