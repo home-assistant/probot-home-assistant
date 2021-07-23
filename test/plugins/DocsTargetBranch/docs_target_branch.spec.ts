@@ -148,7 +148,6 @@ describe("DocsTargetBranch", () => {
       _prFiles: [],
     };
     await runDocsTargetBranch(context as any);
-    await sleep(COMMENT_DEBOUNCE_TIME + 50); // wait for comment debouncing to run
     assert.deepEqual(setLabels, {
       labels: ["needs-rebase", "in-progress"],
     });
@@ -203,7 +202,6 @@ describe("DocsTargetBranch", () => {
       _prFiles: [],
     };
     await runDocsTargetBranch(context as any);
-    await sleep(COMMENT_DEBOUNCE_TIME + 50); // wait for comment debouncing to run
     assert.deepEqual(setLabels, {
       labels: ["needs-rebase", "in-progress"],
     });

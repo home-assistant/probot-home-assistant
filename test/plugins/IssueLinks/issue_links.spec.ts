@@ -3,6 +3,8 @@ import { runIssueLinks } from "../../../src/plugins/IssueLinks/issue_links";
 
 describe("IssueLinks", () => {
   it("Add comment", async () => {
+    let createComment: any;
+
     await runIssueLinks({
       // @ts-ignore
       log: () => undefined,
@@ -17,9 +19,15 @@ describe("IssueLinks", () => {
       issue: (val) => val,
       github: {
         // @ts-ignore
-        issues: {},
+        issues: {
+          // @ts-ignore
+          async createComment(body) {
+            createComment = body;
+          },
+        }
       },
       _prFiles: [],
     });
+    assert.ok(createComment.body.indexOf("awesome documentation") !== -1);
   });
 });
