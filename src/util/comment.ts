@@ -22,12 +22,17 @@ const postComment = (key: string) => {
 
   const context = pendingComment.context;
 
-  const toPost = pendingComment.comments.map(
-    (comment) =>
-      `${comment.message}\n<sub><sup>(message by ${comment.handler})</sup></sub>`
+  // Group messages by handler in alphabetical order
+  const handlers = new Set(pendingComment.comments.map((c) => c.handler));
+  const toPost = [...handlers].sort().map(
+    (handler) =>
+      `${pendingComment.comments
+        .filter((comment) => comment.handler === handler)
+        .map((comment) => comment.message)
+        .join("\n")}\n` + `<sub><sup>(message by ${handler})</sup></sub>`
   );
 
-  let commentBody = toPost.join("\n\n---\n\n");
+  const commentBody = toPost.join("\n\n---\n\n");
 
   context.github.issues.createComment(context.issue({ body: commentBody }));
 };
