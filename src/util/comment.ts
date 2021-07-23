@@ -9,10 +9,10 @@ import { getIssueFromPayload } from "./issue";
 import { debounce } from "./debounce";
 
 type PendingComment = {
-  debouncedPost: Function,
-  context: PRContext | IssueContext,
-  comments: Array<{ handler: string, message: string }>;
-}
+  debouncedPost: Function;
+  context: PRContext | IssueContext;
+  comments: Array<{ handler: string; message: string }>;
+};
 
 const pendingComments = new Map<string, PendingComment>();
 
@@ -34,7 +34,9 @@ const postComment = async (key: string) => {
 
   const commentBody = toPost.join("\n\n---\n\n");
 
-  await context.github.issues.createComment(context.issue({ body: commentBody }));
+  await context.github.issues.createComment(
+    context.issue({ body: commentBody })
+  );
 };
 
 export const scheduleComment = async (
@@ -47,7 +49,7 @@ export const scheduleComment = async (
     pendingComments.set(key, {
       debouncedPost: debounce(() => postComment(key), COMMENT_DEBOUNCE_TIME),
       context,
-      comments: []
+      comments: [],
     });
   }
 
