@@ -1,5 +1,8 @@
 # Issue Links
 
-Repository: Core
+* Repository: core
+* Context: issue
 
-Add links in a comment to Issues based on the integration label that is applied.
+## Purpose
+
+Add links in a comment to issues based on the integration label that is applied.

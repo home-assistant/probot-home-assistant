@@ -124,7 +124,7 @@ export const runCodeOwnersMention = async (
   await Promise.all(promises);
 };
 
-// Temporary local patched version of whats in codeowners-utils
+// Temporary local patched version of what's in codeowners-utils
 // until https://github.com/jamiebuilds/codeowners-utils/pull/1 is merged
 function parse(str: string) {
   let entries = [];

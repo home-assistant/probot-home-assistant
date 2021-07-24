@@ -114,7 +114,7 @@ const wrongTargetBranchDetected = async (
     (label) => label.name
   );
   if (currentLabels.includes("needs-rebase")) {
-    // If the label "needs-rebase" already exsist we can assume that this action has run, and we should ignore it.
+    // If the label "needs-rebase" already exists we can assume that this action has run, and we should ignore it.
     return;
   }
 

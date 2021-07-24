@@ -1,5 +1,8 @@
 # Review Enforcer
 
-Repository: all
+* Repository: all
+* Context: PR
 
-Mark changes by certain users as requiring a review by Balloob.
+## Purpose
+
+Mark changes by certain users or to certain integrations as requiring a review by the core team.

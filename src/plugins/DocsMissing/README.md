@@ -1,7 +1,8 @@
 # Docs Missing
 
-Repository: `core`
+* Repository: core
+* Context: PR
 
-Maintain a commit status on a PR based on if the label "docs-missing" is present or not.
+## Purpose
 
-Will be used in Home Assistant that we do not merge PRs before docs are added.
+Maintain a commit status on a PR based on if the label "docs-missing" is present or not. Used in Home Assistant so that PRs are not merged before docs are added.

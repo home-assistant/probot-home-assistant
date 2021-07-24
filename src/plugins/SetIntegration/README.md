@@ -1,5 +1,8 @@
 # Set integration
 
-Repository: Core
+* Repository: core, home-assistant.io
+* Context: issue
 
-Add integration label from issue context.
+## Purpose
+
+Add integration label from issue context based on linked documentation page.
