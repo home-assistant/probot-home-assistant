@@ -109,7 +109,7 @@ export const runCodeOwnersMention = async (
       `Adding comment to ${triggerLabel} ${triggerURL}: ${commentBody}`
     );
 
-    scheduleComment(context, "CodeOwnersMention", commentBody);
+    promises.push(scheduleComment(context, "CodeOwnersMention", commentBody));
   }
 
   // Add a label if author of issue/PR is a code owner

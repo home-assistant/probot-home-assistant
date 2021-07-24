@@ -30,7 +30,6 @@
   "dependencies": {
     "@probot/serverless-lambda": "^0.3.0",
     "codeowners-utils": "^1.0.0",
-    "debounce": "^1.2.0",
     "ignore": "^5.1.2",
     "probot": "^9.2.19"
   },
