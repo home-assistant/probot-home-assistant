@@ -1,4 +1,5 @@
 import * as assert from "assert";
+import { log } from "../../mock";
 import { runIssueLinks } from "../../../src/plugins/IssueLinks/issue_links";
 
 describe("IssueLinks", () => {
@@ -7,7 +8,7 @@ describe("IssueLinks", () => {
 
     await runIssueLinks({
       // @ts-ignore
-      log: () => undefined,
+      log,
       name: "issues",
       payload: {
         // @ts-ignore

@@ -1,4 +1,5 @@
 import * as assert from "assert";
+import { log } from "../../mock";
 import { runLabelBot } from "../../../src/plugins/LabelBot/label_bot";
 
 describe("LabelBotPlugin", () => {
@@ -7,7 +8,7 @@ describe("LabelBotPlugin", () => {
 
     await runLabelBot({
       // @ts-ignore
-      log: () => undefined,
+      log,
       payload: {
         pull_request: {
           // @ts-ignore
@@ -42,7 +43,7 @@ describe("LabelBotPlugin", () => {
 
     await runLabelBot({
       // @ts-ignore
-      log: () => undefined,
+      log,
       payload: {
         pull_request: {
           // @ts-ignore

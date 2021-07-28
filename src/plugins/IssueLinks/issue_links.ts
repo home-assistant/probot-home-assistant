@@ -3,6 +3,7 @@ import { Application } from "probot";
 import { REPO_CORE } from "../../const";
 import { filterEventByRepo } from "../../util/filter_event_repo";
 import { scheduleComment } from "../../util/comment";
+import { formatContext } from "../../util/log";
 
 const NAME = "IssueLinks";
 
@@ -23,6 +24,9 @@ export const runIssueLinks = async (context: LabeledIssueOrPRContext) => {
 
   const commentBody = `[${integrationName} documentation](${docLink})\n[${integrationName} source](${codeLink})`;
 
-  context.log(NAME, `Adding comment with links ${commentBody}`);
+  context.log.info(
+    { plugin: NAME },
+    `Adding links comment to ${integrationName} to ${formatContext(context)}.`
+  );
   await scheduleComment(context, "IssueLinks", commentBody);
 };

@@ -1,5 +1,6 @@
 import * as assert from "assert";
 import * as sinon from "sinon";
+import { log } from "../../mock";
 import {
   runHacktoberfestNewPR,
   runHacktoberfestClosedPR,
@@ -24,7 +25,7 @@ describe("Hacktoberfest", () => {
       let setLabels: any;
       await runHacktoberfestNewPR({
         // @ts-ignore
-        log: () => undefined,
+        log,
         name: "pull_request",
         payload: {
           // @ts-ignore
@@ -56,7 +57,7 @@ describe("Hacktoberfest", () => {
       let removeLabel: any;
       await runHacktoberfestClosedPR({
         // @ts-ignore
-        log: () => undefined,
+        log,
         name: "pull_request",
         payload: {
           // @ts-ignore

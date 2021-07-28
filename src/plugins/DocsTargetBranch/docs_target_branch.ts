@@ -44,7 +44,7 @@ export const runDocsTargetBranch = async (context: PRContext) => {
     )
   );
 
-  context.log(NAME, `Found ${links.length} links`);
+  context.log.debug({ plugin: NAME }, `Found ${links.length} links.`);
 
   if (links.length === 0) {
     if (target !== "current") {
@@ -63,6 +63,7 @@ export const runDocsTargetBranch = async (context: PRContext) => {
 };
 
 const correctTargetBranchDetected = async (context: PRContext) => {
+  const log = context.log.child({ plugin: NAME });
   const pr = getIssueFromPayload(context);
   const author = context.payload.sender.login;
   const promises: Promise<unknown>[] = [];
@@ -71,6 +72,7 @@ const correctTargetBranchDetected = async (context: PRContext) => {
     (label) => label.name
   );
   if (currentLabels.includes("needs-rebase")) {
+    log.info(`Removing label needs-rebase from PR #${pr.number}.`);
     promises.push(
       context.github.issues.removeLabel(
         // Bug in Probot: https://github.com/probot/probot/issues/917
@@ -87,7 +89,7 @@ const correctTargetBranchDetected = async (context: PRContext) => {
     (assignee) => assignee.login
   );
   if (currentAssignees.includes(author)) {
-    context.log(NAME, `Removing ${author} as assignee`);
+    log.info(`Removing ${author} as assignee from PR #${pr.number}.`);
     promises.push(
       context.github.issues.removeAssignees(
         context.issue({ assignees: [author] })
@@ -100,6 +102,7 @@ const wrongTargetBranchDetected = async (
   context: PRContext,
   correctTargetBranch: "current" | "next"
 ) => {
+  const log = context.log.child({ plugin: NAME });
   const labels = ["needs-rebase", "in-progress"];
   const author = context.payload.sender.login;
   const promises: Promise<unknown>[] = [];
@@ -118,7 +121,7 @@ const wrongTargetBranchDetected = async (
     return;
   }
 
-  context.log(NAME, `Adding ${labels} to PR`);
+  log.info(`Adding labels ${labels.join(", ")} to PR #${pr.number}.`);
   promises.push(
     context.github.issues.addLabels(
       // Bug in Probot: https://github.com/probot/probot/issues/917
@@ -129,16 +132,12 @@ const wrongTargetBranchDetected = async (
     )
   );
 
-  context.log(NAME, `Adding ${author} as assignee`);
+  log.info(`Adding ${author} as assignee to PR #${pr.number}.`);
   promises.push(
     context.github.issues.addAssignees(context.issue({ assignees: [author] }))
   );
 
-  context.log(
-    NAME,
-    `Adding comment to ${context.payload.pull_request.number}: ${body}`
-  );
-
+  log.info(`Adding comment to PR #${pr.number}: ${body}`);
   promises.push(scheduleComment(context, "DocsTargetBranch", body));
 
   await Promise.all(promises);

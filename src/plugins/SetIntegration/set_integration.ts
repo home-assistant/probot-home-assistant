@@ -14,10 +14,11 @@ export const initSetIntegration = (app: Application) => {
 };
 
 export const runSetIntegration = async (context: IssueContext) => {
+  const log = context.log.child({ plugin: NAME });
+
   const repository = extractRepoFromContext(context);
   if (!activeRepositories.includes(repository)) {
-    console.log(
-      NAME,
+    log.debug(
       `Skipping event because repository ${repository} does not match ${activeRepositories}.`
     );
     return;
@@ -26,6 +27,9 @@ export const runSetIntegration = async (context: IssueContext) => {
     context.payload.issue.body
   );
 
+  log.debug(
+    `Trying labels ${foundLinks} for issue #${context.payload.issue.number}.`
+  );
   let labels = (await Promise.all(
     foundLinks.map(async (link) => {
       const label = `integration: ${link.integration}`;
@@ -42,10 +46,8 @@ export const runSetIntegration = async (context: IssueContext) => {
     return;
   }
 
-  context.log(
-    `${NAME}: Setting labels on #${context.payload.issue.number}: ${labels.join(
-      ", "
-    )}`
+  log.info(
+    `Setting labels on issue #${context.payload.issue.number}: ${labels}.`
   );
   await context.github.issues.addLabels(context.issue({ labels }));
 };

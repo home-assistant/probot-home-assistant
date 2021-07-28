@@ -8,6 +8,7 @@ import {
   extractPullRequestURLLinks,
 } from "../../util/text_parser";
 import { getPRState } from "../../util/pull_request";
+import { formatContext } from "../../util/log";
 
 const NAME = "DocsParenting";
 
@@ -27,37 +28,30 @@ export const initDocsParenting = (app: Application) => {
 
 // Deal with PRs on Home Assistant Python repo
 const runDocsParentingNonDocs = async (context: PRContext) => {
+  const log = context.log.child({ plugin: NAME });
   const triggerIssue = getIssueFromPayload(context);
 
   const linksToDocs = extractIssuesOrPullRequestMarkdownLinks(triggerIssue.body)
     .concat(extractPullRequestURLLinks(triggerIssue.body))
     .filter((link) => link.repo === REPO_HOME_ASSISTANT_IO);
 
-  context.log(
-    NAME,
-    "NON-DOC-PR",
-    `Found ${linksToDocs.length} links to doc PRs`
-  );
+  log.debug(`NON-DOCS: Found ${linksToDocs.length} links to docs PRs.`);
 
   if (linksToDocs.length === 0) {
     return;
   }
 
   if (linksToDocs.length > 2) {
-    context.log(
-      NAME,
-      "NON-DOC-PR",
-      "Not adding has-parent label because HASS PR has more than 2 links to docs PRs."
+    log.info(
+      `NON-DOCS: Ignoring too many PRs linked from ${formatContext(context)}.`
     );
     return;
   }
 
-  context.log(
-    NAME,
-    "NON-DOC-PR",
-    `Adding has-parent label to doc PRS ${linksToDocs
-      .map((link) => link.number)
-      .join(", ")}`
+  const PRnumbers = linksToDocs.map((link) => link.number);
+  const linkedFrom = formatContext(context);
+  log.info(
+    `NON-DOCS: Adding has-parent label to docs PRs ${PRnumbers} linked from ${linkedFrom}.`
   );
 
   await Promise.all([
@@ -72,6 +66,7 @@ const runDocsParentingNonDocs = async (context: PRContext) => {
 
 // Deal with PRs on Home Assistant.io repo
 const runDocsParentingDocs = async (context: PRContext) => {
+  const log = context.log.child({ plugin: NAME });
   const triggerIssue = getIssueFromPayload(context);
   const linksToNonDocs = extractIssuesOrPullRequestMarkdownLinks(
     triggerIssue.body
@@ -81,22 +76,12 @@ const runDocsParentingDocs = async (context: PRContext) => {
       (link) => link.owner === ORG_HASS && link.repo !== REPO_HOME_ASSISTANT_IO
     );
 
-  context.log(
-    NAME,
-    "DOC-PR",
-    `Found ${linksToNonDocs.length} links to non-doc PRs`
-  );
-
+  log.debug(`DOCS: Found ${linksToNonDocs.length} links to non-docs PRs.`);
   if (linksToNonDocs.length === 0) {
     return;
   }
 
-  context.log(
-    NAME,
-    "DOC-PR",
-    `Adding has-parent label to doc PR ${triggerIssue.number}`
-  );
-
+  log.info(`DOCS: Adding has-parent label to docs PR #${triggerIssue.number}.`);
   await context.github.issues.addLabels({
     ...context.issue(),
     labels: ["has-parent"],
@@ -113,20 +98,19 @@ const updateDocsParentStatus = async (context: PRContext) => {
   if (extractRepoFromContext(context) === REPO_HOME_ASSISTANT_IO) {
     return;
   }
-  const log = (msg: string) => context.log(NAME, "PARENT-STATUS-SYNC", msg);
 
+  const log = context.log.child({ plugin: NAME });
   const pr = context.payload.pull_request;
 
   const linksToDocs = extractIssuesOrPullRequestMarkdownLinks(pr.body).filter(
     (link) => link.repo === REPO_HOME_ASSISTANT_IO
   );
 
-  log(`PR ${pr.number} contains ${linksToDocs.length} links to doc PRs`);
+  log.debug(
+    `SYNC: ${formatContext(context)} contains ${linksToDocs.length} links.`
+  );
 
   if (linksToDocs.length !== 1) {
-    if (linksToDocs.length > 1) {
-      log(`Not doing work because more than 1 link found.`);
-    }
     return;
   }
 
@@ -139,19 +123,21 @@ const updateDocsParentStatus = async (context: PRContext) => {
     const docsPRState = getPRState(docsPR);
 
     if (docsPRState === "open") {
-      log(
-        `Parent got opened, docs PR ${docLink.number} is already open. Not doing work`
+      log.debug(
+        `SYNC: Parent got opened, docs PR #${docLink.number} is already open.`
       );
       return;
     }
 
     if (docsPRState === "merged") {
-      log(`Parent got opened but docs PR ${docLink.number} is already merged.`);
+      log.debug(
+        `SYNC: Parent got opened, docs PR #${docLink.number} is already merged.`
+      );
       return;
     }
 
     // docs PR state == closed
-    log(`Parent got opened, opening docs PR ${docLink.number}.`);
+    log.info(`SYNC: Parent got opened, opening docs PR #${docLink.number}.`);
     await context.github.pulls.update({
       ...docLink.pull(),
       state: "open",
@@ -160,7 +146,7 @@ const updateDocsParentStatus = async (context: PRContext) => {
   }
 
   if (parentState === "closed") {
-    log(`Parent got closed, closing docs PR ${docLink.number}`);
+    log.info(`SYNC: Parent got closed, closing docs PR #${docLink.number}.`);
     await context.github.pulls.update({
       ...docLink.pull(),
       state: "closed",
@@ -169,8 +155,7 @@ const updateDocsParentStatus = async (context: PRContext) => {
   }
 
   // Parent state == merged
-  log(`Adding parent-merged label to doc PR ${docLink.number}`);
-
+  log.info(`SYNC: Adding parent-merged label to docs PR #${docLink.number}.`);
   await context.github.issues.addLabels({
     ...docLink.issue(),
     labels: ["parent-merged"],

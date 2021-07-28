@@ -1,3 +1,3 @@
-import { probotApp } from './probot_app';
+import { probotApp } from "./probot_app";
 
 export = probotApp;

@@ -42,6 +42,7 @@ export const initLabelBot = (app: Application) => {
 };
 
 export const runLabelBot = async (context: PRContext) => {
+  const log = context.log.child({ plugin: NAME });
   const files = await fetchPullRequestFilesFromContext(context);
   const parsed = files.map((file) => new ParsedPath(file));
   const labelSet = new Set();
@@ -64,19 +65,18 @@ export const runLabelBot = async (context: PRContext) => {
 
   const labels = Array.from(labelSet);
 
-  if (labels.length === 0 || labels.length > 9) {
-    context.log(
-      `LabelBot: Not setting ${labels.length} labels because out of range of what we allow`
+  if (labels.length === 0) return;
+
+  if (labels.length > 9) {
+    log.warn(
+      `Not setting ${labels.length} on PR #${context.payload.pull_request.number}, because it is out of the allowed range.`
     );
     return;
   }
 
-  context.log(
-    `LabelBot: Setting labels on PR ${
-      context.payload.pull_request.number
-    }: ${labels.join(", ")}`
+  log.info(
+    `Adding labels to PR #${context.payload.pull_request.number}: ${labels}.`
   );
-
   await context.github.issues.addLabels(
     // Bug in Probot: https://github.com/probot/probot/issues/917
     // @ts-ignore

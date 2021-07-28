@@ -1,4 +1,5 @@
 import * as assert from "assert";
+import { log } from "../../../mock";
 import { runLabelBot } from "../../../../src/plugins/LabelBot/label_bot";
 
 describe("LabelBotPlugin - typeOfChange", () => {
@@ -7,7 +8,7 @@ describe("LabelBotPlugin - typeOfChange", () => {
 
     await runLabelBot({
       // @ts-ignore
-      log: () => undefined,
+      log,
       payload: {
         // @ts-ignore
         pull_request: {
@@ -39,7 +40,7 @@ describe("LabelBotPlugin - typeOfChange", () => {
 
     await runLabelBot({
       // @ts-ignore
-      log: () => undefined,
+      log,
       payload: {
         // @ts-ignore
         pull_request: {
@@ -71,7 +72,7 @@ describe("LabelBotPlugin - typeOfChange", () => {
 
     await runLabelBot({
       // @ts-ignore
-      log: () => undefined,
+      log,
       payload: {
         // @ts-ignore
         pull_request: {
@@ -103,7 +104,7 @@ describe("LabelBotPlugin - typeOfChange", () => {
 
     await runLabelBot({
       // @ts-ignore
-      log: () => undefined,
+      log,
       payload: {
         // @ts-ignore
         pull_request: {
@@ -136,7 +137,7 @@ describe("LabelBotPlugin - typeOfChange", () => {
 
     await runLabelBot({
       // @ts-ignore
-      log: () => undefined,
+      log,
       payload: {
         // @ts-ignore
         pull_request: {
@@ -169,7 +170,7 @@ describe("LabelBotPlugin - typeOfChange", () => {
 
     await runLabelBot({
       // @ts-ignore
-      log: () => undefined,
+      log,
       payload: {
         // @ts-ignore
         pull_request: {

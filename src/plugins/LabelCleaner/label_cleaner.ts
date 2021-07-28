@@ -4,6 +4,7 @@ import { REPO_CORE, REPO_HOME_ASSISTANT_IO } from "../../const";
 import { extractRepoFromContext } from "../../util/filter_event_repo";
 import { getIssueFromPayload } from "../../util/issue";
 import { WebhookPayloadIssuesIssue } from "@octokit/webhooks";
+import { formatContext } from "../../util/log";
 
 const NAME = "LabelCleaner";
 
@@ -42,11 +43,9 @@ export const runLabelCleaner = async (context: PRContext) => {
 
   // If any label delete tasks created, await them.
   if (labelsToRemove.length) {
-    context.log(
-      NAME,
-      `Cleaning up labels from ${repo} PR ${pr.number}: ${labelsToRemove.join(
-        ", "
-      )}`
+    context.log.info(
+      { plugin: NAME },
+      `Cleaning up labels on ${formatContext(context)}: ${labelsToRemove}.`
     );
     await Promise.all(
       labelsToRemove.map((label) =>

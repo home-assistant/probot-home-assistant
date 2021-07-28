@@ -19,7 +19,7 @@ export const extractRepoFromContext = (
 };
 
 export const filterEventByRepo = <T>(
-  name: string,
+  plugin: string,
   filterRepository: string,
   handler: (context: Context<T>) => Promise<void>
 ): ((context: Context<T>) => Promise<void>) => {
@@ -28,15 +28,18 @@ export const filterEventByRepo = <T>(
     const repo = extractRepoFromContext(context);
 
     if (!repo) {
-      context.log(name, `Skipping event because it has no repository.`);
+      context.log.debug(
+        { plugin },
+        `Skipping event because it has no repository.`
+      );
       return;
     }
 
     const repoName = repo.substr(repo.indexOf("/") + 1);
 
     if (repoName !== filterRepository) {
-      context.log(
-        name,
+      context.log.debug(
+        { plugin },
         `Skipping event because repository ${repoName} does not match ${filterRepository}.`
       );
       return;

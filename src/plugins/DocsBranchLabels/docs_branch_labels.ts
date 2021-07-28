@@ -28,7 +28,10 @@ export const runDocsBranchLabels = async (context: PRContext) => {
     BRANCHES.includes(targetBranch) &&
     !currentLabels.includes(targetBranch)
   ) {
-    context.log(NAME, `Adding label ${targetBranch} to PR ${pr.number}`);
+    context.log.info(
+      { plugin: NAME },
+      `Adding label ${targetBranch} to PR #${pr.number}.`
+    );
     tasks.push(
       context.github.issues.addLabels({
         ...context.issue(),

@@ -1,13 +1,11 @@
 import * as assert from "assert";
+import { log } from "../../mock";
 import {
   runDocsTargetBranch,
   bodyShouldTargetCurrent,
   bodyShouldTargetNext,
 } from "../../../src/plugins/DocsTargetBranch/docs_target_branch";
 import { PRContext } from "../../../src/types";
-import { COMMENT_DEBOUNCE_TIME } from "../../../src/const";
-
-const sleep = (duration) => new Promise(resolve => setTimeout(resolve, duration));
 
 describe("DocsTargetBranch", () => {
   it("The branch is correct (current)", async () => {
@@ -16,7 +14,7 @@ describe("DocsTargetBranch", () => {
 
     await runDocsTargetBranch({
       // @ts-ignore
-      log: () => undefined,
+      log,
       name: "pull_request",
       payload: {
         pull_request: {
@@ -62,7 +60,7 @@ describe("DocsTargetBranch", () => {
 
     await runDocsTargetBranch({
       // @ts-ignore
-      log: () => undefined,
+      log,
       name: "pull_request",
       payload: {
         pull_request: {
@@ -110,7 +108,7 @@ describe("DocsTargetBranch", () => {
 
     const context: Partial<PRContext> = {
       // @ts-ignore
-      log: () => undefined,
+      log,
       name: "pull_request",
       payload: {
         pull_request: {
@@ -163,7 +161,7 @@ describe("DocsTargetBranch", () => {
 
     const context: Partial<PRContext> = {
       // @ts-ignore
-      log: () => undefined,
+      log,
       name: "pull_request",
       payload: {
         pull_request: {
@@ -213,7 +211,7 @@ describe("DocsTargetBranch", () => {
   it("Label 'needs-rebase' already exsist", async () => {
     await runDocsTargetBranch({
       // @ts-ignore
-      log: () => undefined,
+      log,
       name: "pull_request",
       payload: {
         pull_request: {

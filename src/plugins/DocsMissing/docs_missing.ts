@@ -24,6 +24,10 @@ export const runDocsMissing = async (context: PRContext) => {
     .map((label) => label.name)
     .includes("docs-missing");
 
+  context.log.info(
+    { plugin: NAME },
+    `Creating documentation status on PR #${pr.number}.`
+  );
   await context.github.repos.createStatus(
     context.repo({
       sha: pr.head.sha,

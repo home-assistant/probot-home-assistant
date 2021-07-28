@@ -22,6 +22,8 @@ export const initSetDocumentationSection = (app: Application) => {
 };
 
 export const runSetDocumentationSection = async (context: IssueContext) => {
+  const log = context.log.child({ plugin: NAME });
+
   const foundSections = extractDocumentationSectionsLinks(
     context.payload.issue.body
   );
@@ -31,6 +33,9 @@ export const runSetDocumentationSection = async (context: IssueContext) => {
     return;
   }
 
+  log.debug(
+    `Trying labels ${foundSections} for issue #${context.payload.issue.number}.`
+  );
   let labels = (await Promise.all(
     foundSections.map(async (section) => {
       try {
@@ -41,7 +46,7 @@ export const runSetDocumentationSection = async (context: IssueContext) => {
           return section;
         }
       } catch (err) {
-        context.log(err);
+        context.log.error({ plugin: NAME, err });
       }
     })
   )).filter(Boolean);
@@ -50,10 +55,8 @@ export const runSetDocumentationSection = async (context: IssueContext) => {
     return;
   }
 
-  context.log(
-    `${NAME}: Setting labels on #${context.payload.issue.number}: ${labels.join(
-      ", "
-    )}`
+  log.info(
+    `Setting labels on issue #${context.payload.issue.number}: ${labels}.`
   );
   await context.github.issues.addLabels(context.issue({ labels }));
 };

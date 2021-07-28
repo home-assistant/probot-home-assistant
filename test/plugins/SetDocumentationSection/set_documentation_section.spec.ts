@@ -1,5 +1,6 @@
 // @ts-nocheck
 import * as assert from "assert";
+import { log } from "../../mock";
 import {
   NAME,
   runSetDocumentationSection,
@@ -10,7 +11,7 @@ describe(NAME, () => {
   let getLabelResponse: any;
   let issueBody: string;
   const mockContext = {
-    log: () => undefined,
+    log,
     payload: {
       issue: {
         body: issueBody,

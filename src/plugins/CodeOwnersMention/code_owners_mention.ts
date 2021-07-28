@@ -1,3 +1,5 @@
+import { formatContext } from "../../util/log";
+
 const codeownersUtils = require("codeowners-utils");
 import { LabeledIssueOrPRContext } from "../../types";
 import { Application } from "probot";
@@ -8,6 +10,7 @@ import { scheduleComment } from "../../util/comment";
 import { WebhookPayloadIssuesIssue } from "@octokit/webhooks";
 
 const NAME = "CodeOwnersMention";
+
 const activeRepositories = [REPO_CORE, REPO_HOME_ASSISTANT_IO];
 
 export const initCodeOwnersMention = (app: Application) => {
@@ -17,10 +20,11 @@ export const initCodeOwnersMention = (app: Application) => {
 export const runCodeOwnersMention = async (
   context: LabeledIssueOrPRContext
 ) => {
+  const log = context.log.child({ plugin: NAME });
+
   const repository = extractRepoFromContext(context);
   if (!activeRepositories.includes(repository)) {
-    context.log(
-      NAME,
+    log.debug(
       `Skipping event because repository ${repository} does not match ${activeRepositories}.`
     );
     return;
@@ -28,7 +32,6 @@ export const runCodeOwnersMention = async (
 
   const labelName = context.payload.label.name;
   const triggerIssue = getIssueFromPayload(context);
-  const triggerURL = triggerIssue.html_url;
 
   if (labelName.indexOf("integration: ") === -1) {
     return;
@@ -48,7 +51,9 @@ export const runCodeOwnersMention = async (
   const str = Buffer.from(codeownersData.data.content, "base64").toString();
 
   if (str.indexOf(integrationName) === -1) {
-    context.log(NAME, `Integration ${integrationName} not in CODEOWNERS`);
+    log.info(
+      `Skipping label ${labelName} because integration ${integrationName} is not in CODEOWNERS.`
+    );
     return;
   }
 
@@ -56,7 +61,9 @@ export const runCodeOwnersMention = async (
   const match = codeownersUtils.matchFile(path, entries);
 
   if (!match) {
-    context.log(NAME, `No match found in CODEOWNERS for ${path}`);
+    log.info(
+      `Skipping label ${labelName} because path ${path} is not found in CODEOWNERS.`
+    );
     return;
   }
 
@@ -82,6 +89,7 @@ export const runCodeOwnersMention = async (
   const payloadUsername = triggerIssue.user.login.toLowerCase();
   const ownersMinusAuthor = owners.filter((usr) => usr !== payloadUsername);
 
+  log.info(`Assigning to ${formatContext(context)}: ${ownersMinusAuthor}`);
   const promises: Promise<unknown>[] = [
     context.github.issues.addAssignees(
       context.issue({ assignees: ownersMinusAuthor })
@@ -104,16 +112,15 @@ export const runCodeOwnersMention = async (
       ", "
     )}, mind taking a look at this ${triggerLabel} as it has been labeled with an integration (\`${integrationName}\`) you are listed as a [code owner](${codeownersLine}) for? Thanks!`;
 
-    context.log(
-      NAME,
-      `Adding comment to ${triggerLabel} ${triggerURL}: ${commentBody}`
-    );
+    log.info(`Adding comment to ${formatContext(context)}: ${commentBody}`);
 
     promises.push(scheduleComment(context, "CodeOwnersMention", commentBody));
   }
 
   // Add a label if author of issue/PR is a code owner
   if (owners.includes(payloadUsername)) {
+    log.info(`Adding by-code-owner label to ${formatContext(context)}.`);
+
     promises.push(
       context.github.issues.addLabels(
         context.issue({ labels: ["by-code-owner"] })

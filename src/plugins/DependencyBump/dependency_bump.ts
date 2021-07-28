@@ -38,6 +38,10 @@ const runDependencyBump = async (context: PRContext) => {
     return;
   }
 
+  context.log.info(
+    { plugin: NAME },
+    `Adding label dependency-bump to PR #${context.payload.pull_request.number}.`
+  );
   await context.github.issues.addLabels(
     context.issue({ labels: ["dependency-bump"] })
   );
