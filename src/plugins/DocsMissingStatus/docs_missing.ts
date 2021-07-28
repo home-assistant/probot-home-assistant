@@ -6,7 +6,7 @@ import { WebhookPayloadIssuesIssue } from "@octokit/webhooks";
 
 const NAME = "DocsMissing";
 
-export const initDocsMissing = (app: Application) => {
+export const initDocsMissingStatus = (app: Application) => {
   app.on(
     [
       "pull_request.labeled",
