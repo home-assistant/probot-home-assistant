@@ -1,5 +1,5 @@
-import { Context } from "probot";
 import { PayloadRepository } from "@octokit/webhooks";
+import { Context } from "probot";
 
 export const extractRepoFromContext = (
   context: Context<any>

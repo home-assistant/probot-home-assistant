@@ -1,6 +1,6 @@
-import { entityComponents, coreComponents } from "../const";
 import { PullsListFilesResponseItem } from "@octokit/rest";
 import { basename } from "path";
+import { coreComponents, entityComponents } from "../const";
 
 export class ParsedPath {
   public file: PullsListFilesResponseItem;

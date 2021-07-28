@@ -1,4 +1,4 @@
-import { Context, Logger } from "probot";
+import { Context } from "probot";
 
 export const filterEventNoBot = <T>(
   plugin: string,

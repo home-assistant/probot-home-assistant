@@ -1,6 +1,6 @@
-import { PullsListFilesResponseItem, PullsGetResponse } from "@octokit/rest";
-import { PRContext } from "../types";
+import { PullsGetResponse, PullsListFilesResponseItem } from "@octokit/rest";
 import { GitHubAPI } from "probot/lib/github";
+import { PRContext } from "../types";
 
 interface PRContextPatched extends PRContext {
   _prFiles?: Promise<PullsListFilesResponseItem[]>;

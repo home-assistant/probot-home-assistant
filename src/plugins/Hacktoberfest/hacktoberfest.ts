@@ -1,9 +1,6 @@
-import { PRContext } from "../../types";
-import { Application } from "probot";
-import { filterEventByRepo } from "../../util/filter_event_repo";
-import { REPO_CORE } from "../../const";
-import { filterEventNoBot } from "../../util/filter_event_no_bot";
 import { WebhookPayloadIssuesIssue } from "@octokit/webhooks";
+import { Application } from "probot";
+import { PRContext } from "../../types";
 
 const NAME = "Hacktoberfest";
 

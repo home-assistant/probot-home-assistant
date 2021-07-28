@@ -1,10 +1,9 @@
-import { Context } from "probot";
-
 import {
-  WebhookPayloadPullRequest,
-  WebhookPayloadLabel,
   WebhookPayloadIssues,
+  WebhookPayloadLabel,
+  WebhookPayloadPullRequest,
 } from "@octokit/webhooks";
+import { Context } from "probot";
 
 export type PRContext = Context<WebhookPayloadPullRequest>;
 export type IssueContext = Context<WebhookPayloadIssues>;

@@ -1,21 +1,20 @@
+import { Application } from "probot";
+import { REPO_CORE } from "../../const";
+import { PRContext } from "../../types";
+import { filterEventNoBot } from "../../util/filter_event_no_bot";
+import { filterEventByRepo } from "../../util/filter_event_repo";
 import { ParsedPath } from "../../util/parse_path";
 import { fetchPullRequestFilesFromContext } from "../../util/pull_request";
 
 // Convert a list of file paths to labels to set
-
 import componentAndPlatform from "./strategies/componentAndPlatform";
+import hasTests from "./strategies/hasTests";
+import markCore from "./strategies/markCore";
 import newIntegrationOrPlatform from "./strategies/newIntegrationOrPlatform";
 import removePlatform from "./strategies/removePlatform";
-import warnOnMergeToMaster from "./strategies/warnOnMergeToMaster";
-import markCore from "./strategies/markCore";
 import smallPR from "./strategies/smallPR";
-import hasTests from "./strategies/hasTests";
 import typeOfChange from "./strategies/typeOfChange";
-import { PRContext } from "../../types";
-import { Application } from "probot";
-import { filterEventByRepo } from "../../util/filter_event_repo";
-import { filterEventNoBot } from "../../util/filter_event_no_bot";
-import { REPO_CORE } from "../../const";
+import warnOnMergeToMaster from "./strategies/warnOnMergeToMaster";
 
 const NAME = "LabelBot";
 

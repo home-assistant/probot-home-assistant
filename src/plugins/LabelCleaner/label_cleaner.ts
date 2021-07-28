@@ -1,9 +1,9 @@
-import { PRContext } from "../../types";
+import { WebhookPayloadIssuesIssue } from "@octokit/webhooks";
 import { Application } from "probot";
 import { REPO_CORE, REPO_HOME_ASSISTANT_IO } from "../../const";
+import { PRContext } from "../../types";
 import { extractRepoFromContext } from "../../util/filter_event_repo";
 import { getIssueFromPayload } from "../../util/issue";
-import { WebhookPayloadIssuesIssue } from "@octokit/webhooks";
 import { formatContext } from "../../util/log";
 
 const NAME = "LabelCleaner";

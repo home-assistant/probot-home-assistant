@@ -1,13 +1,12 @@
-import { formatContext } from "../../util/log";
-
 const codeownersUtils = require("codeowners-utils");
-import { LabeledIssueOrPRContext } from "../../types";
+import { WebhookPayloadIssuesIssue } from "@octokit/webhooks";
 import { Application } from "probot";
 import { REPO_CORE, REPO_HOME_ASSISTANT_IO } from "../../const";
+import { LabeledIssueOrPRContext } from "../../types";
+import { scheduleComment } from "../../util/comment";
 import { extractRepoFromContext } from "../../util/filter_event_repo";
 import { getIssueFromPayload } from "../../util/issue";
-import { scheduleComment } from "../../util/comment";
-import { WebhookPayloadIssuesIssue } from "@octokit/webhooks";
+import { formatContext } from "../../util/log";
 
 const NAME = "CodeOwnersMention";
 
@@ -72,6 +71,8 @@ export const runCodeOwnersMention = async (
     (usr) => usr.substring(1).toLowerCase()
   );
 
+  // Because of our patched parse(), TS doesn't know about the match property.
+  // @ts-ignore
   const codeownersLine = `${codeownersData.data.html_url}#L${match.line}`;
 
   // The type for the PR payload is wrong for assignees. Cast it to issue. type is the same.

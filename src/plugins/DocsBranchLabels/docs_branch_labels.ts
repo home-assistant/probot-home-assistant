@@ -1,8 +1,8 @@
-import { PRContext } from "../../types";
+import { WebhookPayloadIssuesIssue } from "@octokit/webhooks";
 import { Application } from "probot";
 import { REPO_HOME_ASSISTANT_IO } from "../../const";
+import { PRContext } from "../../types";
 import { filterEventByRepo } from "../../util/filter_event_repo";
-import { WebhookPayloadIssuesIssue } from "@octokit/webhooks";
 
 const NAME = "DocsBranchLabels";
 

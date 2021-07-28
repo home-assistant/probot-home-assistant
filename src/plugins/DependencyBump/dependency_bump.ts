@@ -1,9 +1,9 @@
-import { fetchPullRequestFilesFromContext } from "../../util/pull_request";
-import { PRContext } from "../../types";
 import { Application } from "probot";
-import { filterEventByRepo } from "../../util/filter_event_repo";
 import { REPO_CORE } from "../../const";
+import { PRContext } from "../../types";
 import { filterEventNoBot } from "../../util/filter_event_no_bot";
+import { filterEventByRepo } from "../../util/filter_event_repo";
+import { fetchPullRequestFilesFromContext } from "../../util/pull_request";
 
 const NAME = "DependencyBump";
 

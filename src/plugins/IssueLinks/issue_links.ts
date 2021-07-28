@@ -1,8 +1,8 @@
-import { LabeledIssueOrPRContext } from "../../types";
 import { Application } from "probot";
 import { REPO_CORE } from "../../const";
-import { filterEventByRepo } from "../../util/filter_event_repo";
+import { LabeledIssueOrPRContext } from "../../types";
 import { scheduleComment } from "../../util/comment";
+import { filterEventByRepo } from "../../util/filter_event_repo";
 import { formatContext } from "../../util/log";
 
 const NAME = "IssueLinks";

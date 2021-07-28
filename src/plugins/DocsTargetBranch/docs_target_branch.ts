@@ -1,20 +1,20 @@
-import { Application } from "probot";
 import { WebhookPayloadIssuesIssue } from "@octokit/webhooks";
-import { PRContext } from "../../types";
-import { filterEventByRepo } from "../../util/filter_event_repo";
-import { filterEventNoBot } from "../../util/filter_event_no_bot";
+import { Application } from "probot";
 import {
+  ORG_HASS,
   REPO_BRANDS,
   REPO_DEV_DOCUMENTATION,
   REPO_HOME_ASSISTANT_IO,
-  ORG_HASS,
 } from "../../const";
+import { PRContext } from "../../types";
+import { scheduleComment } from "../../util/comment";
+import { filterEventNoBot } from "../../util/filter_event_no_bot";
+import { filterEventByRepo } from "../../util/filter_event_repo";
+import { getIssueFromPayload } from "../../util/issue";
 import {
   extractIssuesOrPullRequestMarkdownLinks,
   extractPullRequestURLLinks,
 } from "../../util/text_parser";
-import { getIssueFromPayload } from "../../util/issue";
-import { scheduleComment } from "../../util/comment";
 
 const NAME = "DocsTargetBranch";
 const SKIP_REPOS = [REPO_BRANDS, REPO_DEV_DOCUMENTATION];

@@ -1,10 +1,10 @@
 import { IssuesGetResponse } from "@octokit/rest";
-import { PRContext, IssueContext } from "../types";
 import {
   WebhookPayloadIssuesIssue,
   WebhookPayloadPullRequestPullRequest,
 } from "@octokit/webhooks";
 import { GitHubAPI } from "probot/lib/github";
+import { IssueContext, PRContext } from "../types";
 
 interface GitHubAPIpatched extends GitHubAPI {
   _hassIssuesCache?: { [key: string]: Promise<IssuesGetResponse> };

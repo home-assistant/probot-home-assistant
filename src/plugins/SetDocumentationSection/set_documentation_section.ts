@@ -2,8 +2,8 @@ import { Application } from "probot";
 import { REPO_HOME_ASSISTANT_IO } from "../../const";
 import { IssueContext } from "../../types";
 import { filterEventNoBot } from "../../util/filter_event_no_bot";
-import { extractDocumentationSectionsLinks } from "../../util/text_parser";
 import { filterEventByRepo } from "../../util/filter_event_repo";
+import { extractDocumentationSectionsLinks } from "../../util/text_parser";
 
 export const NAME = "SetDocumentationSection";
 

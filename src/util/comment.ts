@@ -4,9 +4,9 @@
  * We debounce it so that we only leave 1 comment with all notices.
  */
 import { COMMENT_DEBOUNCE_TIME } from "../const";
-import { PRContext, IssueContext } from "../types";
-import { getIssueFromPayload } from "./issue";
+import { IssueContext, PRContext } from "../types";
 import { debounce } from "./debounce";
+import { getIssueFromPayload } from "./issue";
 
 type PendingComment = {
   debouncedPost: Function;

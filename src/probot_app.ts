@@ -1,4 +1,4 @@
-import { Application, Context } from "probot";
+import { Application } from "probot";
 import { initLabelBot } from "./plugins/LabelBot/label_bot";
 import { initIssueLinks } from "./plugins/IssueLinks/issue_links";
 import { initCodeOwnersMention } from "./plugins/CodeOwnersMention/code_owners_mention";

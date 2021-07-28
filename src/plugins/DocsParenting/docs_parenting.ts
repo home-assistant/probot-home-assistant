@@ -1,14 +1,14 @@
-import { PRContext } from "../../types";
 import { Application } from "probot";
+import { ORG_HASS, REPO_HOME_ASSISTANT_IO } from "../../const";
+import { PRContext } from "../../types";
 import { extractRepoFromContext } from "../../util/filter_event_repo";
-import { REPO_HOME_ASSISTANT_IO, ORG_HASS } from "../../const";
 import { getIssueFromPayload } from "../../util/issue";
+import { formatContext } from "../../util/log";
+import { getPRState } from "../../util/pull_request";
 import {
   extractIssuesOrPullRequestMarkdownLinks,
   extractPullRequestURLLinks,
 } from "../../util/text_parser";
-import { getPRState } from "../../util/pull_request";
-import { formatContext } from "../../util/log";
 
 const NAME = "DocsParenting";
 
