@@ -2,7 +2,7 @@ export const ORG_HASS = "home-assistant";
 export const REPO_BRANDS = "brands";
 export const REPO_CORE = "core";
 export const REPO_DEV_DOCUMENTATION = "developers.home-assistant";
-export const REPO_HOME_ASSISTANT_IO = "home-assistant.io";
+export const REPO_DOCS = "home-assistant.io";
 
 export const COMMENT_DEBOUNCE_TIME = 500;
 

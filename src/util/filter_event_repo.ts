@@ -20,9 +20,11 @@ export const extractRepoFromContext = (
 
 export const filterEventByRepo = <T>(
   plugin: string,
-  filterRepository: string,
+  allowRepos: string | string[],
   handler: (context: Context<T>) => Promise<void>
 ): ((context: Context<T>) => Promise<void>) => {
+  const allow = Array.isArray(allowRepos) ? allowRepos : [allowRepos];
+
   // Wrapped handler function
   return async (context: Context<T>) => {
     const repo = extractRepoFromContext(context);
@@ -35,12 +37,10 @@ export const filterEventByRepo = <T>(
       return;
     }
 
-    const repoName = repo.substr(repo.indexOf("/") + 1);
-
-    if (repoName !== filterRepository) {
+    if (!allow.includes(repo)) {
       context.log.debug(
         { plugin },
-        `Skipping event because repository ${repoName} does not match ${filterRepository}.`
+        `Skipping event because repository ${repo} does not match ${allow}.`
       );
       return;
     }

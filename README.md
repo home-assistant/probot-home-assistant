@@ -4,7 +4,7 @@
 
 - Go to https://github.com/organizations/home-assistant/settings/apps and create new GitHub app
 - Generate Webhook secret by running `openssl rand -base64 32` and fill in on the form.
-- Create the app
+- Create the app (see Permissions & Subscribe to events below)
 - Download the private key and put in the root, name it `github-app-probot-home-assistant-key.pem`
 - Copy `config.yml.template` to `config.yml` and enter the app ID and webhook secret.
 - Deploy this repo with `yarn deploy` and get a HTTP url

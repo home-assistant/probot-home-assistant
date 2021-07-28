@@ -13,8 +13,46 @@ describe("LabelBotPlugin", () => {
         pull_request: {
           // @ts-ignore
           base: {
+            ref: "dev",
+          },
+          labels: []
+        },
+      },
+      // @ts-ignore
+      issue: (val) => val,
+      github: {
+        issues: {
+          // @ts-ignore
+          async addLabels(labels) {
+            setLabels = labels;
+          },
+        },
+      },
+      _prFiles: [
+        {
+          filename: "homeassistant/components/mqtt/climate.py",
+          additions: 10
+        },
+      ],
+    });
+    assert.deepEqual(setLabels, {
+      labels: ["core", "small-pr", "integration: mqtt"],
+    });
+  });
+
+  it("only applies merge-to-master label", async() => {
+    let setLabels: any;
+
+    await runLabelBot({
+      // @ts-ignore
+      log,
+      payload: {
+        pull_request: {
+          // @ts-ignore
+          base: {
             ref: "master",
           },
+          labels: []
         },
       },
       // @ts-ignore
@@ -34,7 +72,7 @@ describe("LabelBotPlugin", () => {
       ],
     });
     assert.deepEqual(setLabels, {
-      labels: ["merging-to-master", "core", "integration: mqtt"],
+      labels: ["merging-to-master"],
     });
   });
 
@@ -48,11 +86,12 @@ describe("LabelBotPlugin", () => {
         pull_request: {
           // @ts-ignore
           base: {
-            ref: "master",
+            ref: "dev",
           },
           body:
             "\n- [x] Bugfix (non-breaking change which fixes an issue)" +
             "\n- [x] Breaking change (fix/feature causing existing functionality to break)",
+          labels: []
         },
       },
       // @ts-ignore
@@ -99,7 +138,7 @@ describe("LabelBotPlugin", () => {
       ],
     });
     assert.deepEqual(setLabels, {
-      labels: ["merging-to-master", "core", "bugfix", "breaking-change"],
+      labels: ["core", "bugfix", "breaking-change"],
     });
   });
 });

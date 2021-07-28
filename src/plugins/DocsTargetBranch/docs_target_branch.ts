@@ -4,7 +4,7 @@ import {
   ORG_HASS,
   REPO_BRANDS,
   REPO_DEV_DOCUMENTATION,
-  REPO_HOME_ASSISTANT_IO,
+  REPO_DOCS,
 } from "../../const";
 import { PRContext } from "../../types";
 import { scheduleComment } from "../../util/comment";
@@ -29,7 +29,7 @@ export const initDocsTargetBranch = (app: Application) => {
     ["pull_request.opened", "pull_request.edited"],
     filterEventNoBot(
       NAME,
-      filterEventByRepo(NAME, REPO_HOME_ASSISTANT_IO, runDocsTargetBranch)
+      filterEventByRepo(NAME, REPO_DOCS, runDocsTargetBranch)
     )
   );
 };

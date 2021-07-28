@@ -1,11 +1,19 @@
+# Node packages
 node_modules
 npm-debug.log
+yarn-error.log
+
+# Configuration
+.env
 *.pem
-config.yml
-coverage
-dist
-.rpt2_cache/
-github-app-probot-home-assistant-key.pem
-.serverless
 .devcontainer/credentials
+.serverless
+config.yml
+
+# Editors
 .vscode
+
+# Runtime files
+dist
+coverage
+.rpt2_cache/

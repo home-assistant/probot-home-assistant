@@ -1,19 +1,23 @@
 const codeownersUtils = require("codeowners-utils");
 import { WebhookPayloadIssuesIssue } from "@octokit/webhooks";
 import { Application } from "probot";
-import { REPO_CORE, REPO_HOME_ASSISTANT_IO } from "../../const";
+import { REPO_CORE, REPO_DOCS } from "../../const";
 import { LabeledIssueOrPRContext } from "../../types";
 import { scheduleComment } from "../../util/comment";
-import { extractRepoFromContext } from "../../util/filter_event_repo";
+import {
+  extractRepoFromContext,
+  filterEventByRepo,
+} from "../../util/filter_event_repo";
 import { getIssueFromPayload } from "../../util/issue";
 import { formatContext } from "../../util/log";
 
 const NAME = "CodeOwnersMention";
 
-const activeRepositories = [REPO_CORE, REPO_HOME_ASSISTANT_IO];
-
 export const initCodeOwnersMention = (app: Application) => {
-  app.on(["issues.labeled", "pull_request.labeled"], runCodeOwnersMention);
+  app.on(
+    ["issues.labeled", "pull_request.labeled"],
+    filterEventByRepo(NAME, [REPO_CORE, REPO_DOCS], runCodeOwnersMention)
+  );
 };
 
 export const runCodeOwnersMention = async (
@@ -22,13 +26,6 @@ export const runCodeOwnersMention = async (
   const log = context.log.child({ plugin: NAME });
 
   const repository = extractRepoFromContext(context);
-  if (!activeRepositories.includes(repository)) {
-    log.debug(
-      `Skipping event because repository ${repository} does not match ${activeRepositories}.`
-    );
-    return;
-  }
-
   const triggerIssue = getIssueFromPayload(context);
 
   const labelName = context.payload.label.name;

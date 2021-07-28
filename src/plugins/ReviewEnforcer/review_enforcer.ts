@@ -1,5 +1,5 @@
 import { Application } from "probot";
-import { REPO_CORE, REPO_HOME_ASSISTANT_IO } from "../../const";
+import { REPO_CORE, REPO_DOCS } from "../../const";
 import { PRContext } from "../../types";
 import { scheduleComment } from "../../util/comment";
 import { filterEventNoBot } from "../../util/filter_event_no_bot";
@@ -29,7 +29,7 @@ const runReviewEnforcer = async (context: PRContext) => {
 
   if (repo === REPO_CORE) {
     await checkPythonPRFiles(context);
-  } else if (repo === REPO_HOME_ASSISTANT_IO) {
+  } else if (repo === REPO_DOCS) {
     await checkDocsPRFiles(context);
   }
 };

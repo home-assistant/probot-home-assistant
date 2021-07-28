@@ -1,5 +1,5 @@
 import { Application } from "probot";
-import { ORG_HASS, REPO_HOME_ASSISTANT_IO } from "../../const";
+import { ORG_HASS, REPO_DOCS } from "../../const";
 import { PRContext } from "../../types";
 import { extractRepoFromContext } from "../../util/filter_event_repo";
 import { getIssueFromPayload } from "../../util/issue";
@@ -14,7 +14,7 @@ const NAME = "DocsParenting";
 
 export const initDocsParenting = (app: Application) => {
   app.on(["pull_request.opened", "pull_request.edited"], async (context) => {
-    if (extractRepoFromContext(context) === REPO_HOME_ASSISTANT_IO) {
+    if (extractRepoFromContext(context) === REPO_DOCS) {
       await runDocsParentingDocs(context);
     } else {
       await runDocsParentingNonDocs(context);
@@ -26,14 +26,14 @@ export const initDocsParenting = (app: Application) => {
   );
 };
 
-// Deal with PRs on Home Assistant Python repo
+// Deal with PRs on non-documentation repositories
 const runDocsParentingNonDocs = async (context: PRContext) => {
   const log = context.log.child({ plugin: NAME });
   const triggerIssue = getIssueFromPayload(context);
 
   const linksToDocs = extractIssuesOrPullRequestMarkdownLinks(triggerIssue.body)
     .concat(extractPullRequestURLLinks(triggerIssue.body))
-    .filter((link) => link.repo === REPO_HOME_ASSISTANT_IO);
+    .filter((link) => link.repo === REPO_DOCS);
 
   log.debug(`NON-DOCS: Found ${linksToDocs.length} links to docs PRs.`);
 
@@ -72,9 +72,7 @@ const runDocsParentingDocs = async (context: PRContext) => {
     triggerIssue.body
   )
     .concat(extractPullRequestURLLinks(triggerIssue.body))
-    .filter(
-      (link) => link.owner === ORG_HASS && link.repo !== REPO_HOME_ASSISTANT_IO
-    );
+    .filter((link) => link.owner === ORG_HASS && link.repo !== REPO_DOCS);
 
   log.debug(`DOCS: Found ${linksToNonDocs.length} links to non-docs PRs.`);
   if (linksToNonDocs.length === 0) {
@@ -94,7 +92,7 @@ const runDocsParentingDocs = async (context: PRContext) => {
  *  - parent merged: add label "parent-merged"
  */
 const updateDocsParentStatus = async (context: PRContext) => {
-  if (extractRepoFromContext(context) === REPO_HOME_ASSISTANT_IO) {
+  if (extractRepoFromContext(context) === REPO_DOCS) {
     return;
   }
 
@@ -102,7 +100,7 @@ const updateDocsParentStatus = async (context: PRContext) => {
   const pr = context.payload.pull_request;
 
   const linksToDocs = extractIssuesOrPullRequestMarkdownLinks(pr.body).filter(
-    (link) => link.repo === REPO_HOME_ASSISTANT_IO
+    (link) => link.repo === REPO_DOCS
   );
 
   log.debug(

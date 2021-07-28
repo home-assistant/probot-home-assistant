@@ -2,7 +2,6 @@
   "name": "probot-home-assistant",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/app.js",
   "scripts": {
     "build": "rm -rf dist && tsc",
     "watch": "tsc --watch",

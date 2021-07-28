@@ -18,10 +18,19 @@ export const runIssueLinks = async (context: LabeledIssueOrPRContext) => {
   }
 
   const integrationName = labelName.split("integration: ")[1];
-  const docLink = `https://www.home-assistant.io/integrations/${integrationName}`;
+  const filterPRs = encodeURIComponent(`is:pr label:"${labelName}"`);
+  const filterIssues = encodeURIComponent(`is:issue label:"${labelName}"`);
+  const prsLink = `https://github.com/home-assistant/core/pulls?q=${filterPRs}`;
+  const issuesLink = `https://github.com/home-assistant/core/issues?q=${filterIssues}`;
   const codeLink = `https://github.com/home-assistant/core/tree/dev/homeassistant/components/${integrationName}`;
+  const docLink = `https://www.home-assistant.io/integrations/${integrationName}`;
 
-  const commentBody = `[${integrationName} documentation](${docLink})\n[${integrationName} source](${codeLink})`;
+  const commentBody = [
+    `[${integrationName} documentation](${docLink})`,
+    `[${integrationName} issues](${issuesLink})`,
+    `[${integrationName} source](${codeLink})`,
+    `[${integrationName} recent changes](${prsLink})`,
+  ].join("\n");
 
   context.log.info(
     { plugin: NAME },

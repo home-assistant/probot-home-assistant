@@ -1,5 +1,5 @@
 import { Application } from "probot";
-import { REPO_HOME_ASSISTANT_IO } from "../../const";
+import { REPO_DOCS } from "../../const";
 import { IssueContext } from "../../types";
 import { filterEventNoBot } from "../../util/filter_event_no_bot";
 import { filterEventByRepo } from "../../util/filter_event_repo";
@@ -13,11 +13,7 @@ export const initSetDocumentationSection = (app: Application) => {
     ["issues.opened"],
     filterEventNoBot(
       NAME,
-      filterEventByRepo(
-        NAME,
-        REPO_HOME_ASSISTANT_IO,
-        runSetDocumentationSection
-      )
+      filterEventByRepo(NAME, REPO_DOCS, runSetDocumentationSection)
     )
   );
 };
