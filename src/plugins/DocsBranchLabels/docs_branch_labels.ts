@@ -33,10 +33,7 @@ export const runDocsBranchLabels = async (context: PRContext) => {
       `Adding label ${targetBranch} to PR #${pr.number}.`
     );
     tasks.push(
-      context.github.issues.addLabels({
-        ...context.issue(),
-        labels: [targetBranch],
-      })
+      context.github.issues.addLabels(context.issue({ labels: [targetBranch] }))
     );
   }
 
@@ -45,7 +42,7 @@ export const runDocsBranchLabels = async (context: PRContext) => {
     .filter((label) => BRANCHES.includes(label) && label !== targetBranch)
     .forEach((label) =>
       tasks.push(
-        context.github.issues.removeLabel({ ...context.issue(), name: label })
+        context.github.issues.removeLabel(context.issue({ name: label }))
       )
     );
 

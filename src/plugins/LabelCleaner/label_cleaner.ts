@@ -49,7 +49,7 @@ export const runLabelCleaner = async (context: PRContext) => {
     );
     await Promise.all(
       labelsToRemove.map((label) =>
-        context.github.issues.removeLabel({ ...context.issue(), name: label })
+        context.github.issues.removeLabel(context.issue({ name: label }))
       )
     );
   }

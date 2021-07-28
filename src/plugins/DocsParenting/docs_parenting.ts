@@ -82,10 +82,9 @@ const runDocsParentingDocs = async (context: PRContext) => {
   }
 
   log.info(`DOCS: Adding has-parent label to docs PR #${triggerIssue.number}.`);
-  await context.github.issues.addLabels({
-    ...context.issue(),
-    labels: ["has-parent"],
-  });
+  await context.github.issues.addLabels(
+    context.issue({ labels: ["has-parent"] })
+  );
 };
 
 /**

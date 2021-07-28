@@ -14,10 +14,9 @@ export const initHacktoberfest = (app: Application) => {
 };
 
 export const runHacktoberfestNewPR = async (context: PRContext) => {
-  await context.github.issues.addLabels({
-    ...context.issue(),
-    labels: ["Hacktoberfest"],
-  });
+  await context.github.issues.addLabels(
+    context.issue({ labels: ["Hacktoberfest"] })
+  );
 };
 
 export const runHacktoberfestClosedPR = async (context: PRContext) => {
@@ -35,13 +34,9 @@ export const runHacktoberfestClosedPR = async (context: PRContext) => {
 
   // If a Hacktoberfest PR got closed, automatically add "invalid" to it so it won't count for Hacktoberfest
   await Promise.all([
-    context.github.issues.addLabels({
-      ...context.issue(),
-      labels: ["invalid"],
-    }),
-    context.github.issues.removeLabel({
-      ...context.issue(),
-      name: "Hacktoberfest",
-    }),
+    context.github.issues.addLabels(context.issue({ labels: ["invalid"] })),
+    context.github.issues.removeLabel(
+      context.issue({ name: "Hacktoberfest " })
+    ),
   ]);
 };

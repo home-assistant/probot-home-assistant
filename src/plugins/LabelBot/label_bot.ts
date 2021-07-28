@@ -53,8 +53,7 @@ export const runLabelBot = async (context: PRContext) => {
   });
 
   const labels = Array.from(labelSet);
-  if (labels.length === 0)
-    return;
+  if (labels.length === 0) return;
 
   log.info(
     `Adding labels to PR #${context.payload.pull_request.number}: ${labels}.`
