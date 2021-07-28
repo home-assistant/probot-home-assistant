@@ -7,6 +7,7 @@ import { initDocsParenting } from "./plugins/DocsParenting/docs_parenting";
 import { initDocsTargetBranch } from "./plugins/DocsTargetBranch/docs_target_branch";
 import { initLabelCleaner } from "./plugins/LabelCleaner/label_cleaner";
 import { initDocsBranchLabels } from "./plugins/DocsBranchLabels/docs_branch_labels";
+import { initDocsMissingLabel } from "./plugins/DocsMissingLabel/docs_missing";
 import { initDocsMissingStatus } from "./plugins/DocsMissingStatus/docs_missing";
 import { initHacktoberfest } from "./plugins/Hacktoberfest/hacktoberfest";
 import { initDependencyBump } from "./plugins/DependencyBump/dependency_bump";
@@ -22,6 +23,7 @@ export const probotApp = (app: Application) => {
   initDocsTargetBranch(app);
   initLabelCleaner(app);
   initDocsBranchLabels(app);
+  initDocsMissingLabel(app);
   initDocsMissingStatus(app);
   initHacktoberfest(app);
   initDependencyBump(app);
