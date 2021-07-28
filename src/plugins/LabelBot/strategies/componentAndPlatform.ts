@@ -1,7 +1,13 @@
 import { PRContext } from "../../../types";
 import { ParsedPath } from "../../../util/parse_path";
 
-export default (context: PRContext, parsed: ParsedPath[]) =>
-  parsed
-    .filter((file) => file.component)
-    .map((file) => `integration: ${file.component}`);
+const MAX_INTEGRATION_LABELS = 6;
+
+export default (context: PRContext, parsed: ParsedPath[]) => {
+  const labelSet = new Set<string>(
+    parsed
+      .filter((file) => file.component)
+      .map((file) => `integration: ${file.component}`)
+  );
+  return labelSet.size <= MAX_INTEGRATION_LABELS ? Array.from(labelSet) : [];
+};

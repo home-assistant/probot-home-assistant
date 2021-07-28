@@ -25,6 +25,7 @@ const STRATEGIES = [
   smallPR,
   hasTests,
   typeOfChange,
+  componentAndPlatform,
 ];
 
 export const initLabelBot = (app: Application) => {
@@ -51,25 +52,9 @@ export const runLabelBot = async (context: PRContext) => {
     }
   });
 
-  // componentAndPlatform can create many labels, process them separately
-  const componentLabelSet = new Set();
-  for (let label of componentAndPlatform(context, parsed)) {
-    componentLabelSet.add(label);
-  }
-
-  if (labelSet.size + componentLabelSet.size <= 9) {
-    componentLabelSet.forEach(labelSet.add, labelSet);
-  }
-
   const labels = Array.from(labelSet);
-  if (labels.length === 0) return;
-
-  if (labels.length > 9) {
-    log.warn(
-      `Not setting ${labels.length} on PR #${context.payload.pull_request.number}, because it is out of the allowed range.`
-    );
+  if (labels.length === 0)
     return;
-  }
 
   log.info(
     `Adding labels to PR #${context.payload.pull_request.number}: ${labels}.`

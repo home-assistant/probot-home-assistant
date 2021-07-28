@@ -48,5 +48,8 @@ export default function(context: PRContext, parsed: ParsedPath[]) {
     }
   });
 
+  // Don't spam labels if someone checks all items for some reason
+  if (labels.length == BODYMATCHES.length) return [];
+
   return labels;
 }
