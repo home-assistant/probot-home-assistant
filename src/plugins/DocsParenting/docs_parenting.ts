@@ -109,14 +109,12 @@ const updateDocsParentStatus = async (context: PRContext) => {
   log.debug(
     `SYNC: ${formatContext(context)} contains ${linksToDocs.length} links.`
   );
-
   if (linksToDocs.length !== 1) {
     return;
   }
 
   const docLink = linksToDocs[0];
   const parentState = getPRState(pr);
-
   if (parentState === "open") {
     // Parent is open, docs issue should be open too.
     const docsPR = await docLink.fetchPR(context.github);
@@ -146,6 +144,7 @@ const updateDocsParentStatus = async (context: PRContext) => {
   }
 
   if (parentState === "closed") {
+    // Parent is closed, docs issue should be closed too.
     log.info(`SYNC: Parent got closed, closing docs PR #${docLink.number}.`);
     await context.github.pulls.update({
       ...docLink.pull(),

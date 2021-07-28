@@ -3,6 +3,7 @@ import { REPO_CORE, REPO_HOME_ASSISTANT_IO } from "../../const";
 import { IssueContext } from "../../types";
 import { filterEventNoBot } from "../../util/filter_event_no_bot";
 import { extractRepoFromContext } from "../../util/filter_event_repo";
+import { doesLabelExist } from "../../util/label";
 import { extractIntegrationDocumentationLinks } from "../../util/text_parser";
 
 export const NAME = "SetIntegration";
@@ -23,31 +24,23 @@ export const runSetIntegration = async (context: IssueContext) => {
     );
     return;
   }
-  const foundLinks = extractIntegrationDocumentationLinks(
-    context.payload.issue.body
-  );
 
-  log.debug(
-    `Trying labels ${foundLinks} for issue #${context.payload.issue.number}.`
+  const issue = context.payload.issue;
+  const foundLinks = extractIntegrationDocumentationLinks(issue.body);
+
+  const foundLabels = foundLinks.map(
+    (link) => `integration: ${link.integration}`
   );
-  let labels = (await Promise.all(
-    foundLinks.map(async (link) => {
-      const label = `integration: ${link.integration}`;
-      const exist = await context.github.issues.getLabel(
-        context.issue({ name: label, repo: REPO_CORE })
-      );
-      if (exist.status === 200 && exist.data.name === label) {
-        return label;
-      }
-    })
-  )).filter(Boolean);
+  log.debug(`Trying labels ${foundLabels} for issue #${issue.number}.`);
+  const existence = await Promise.all(
+    foundLabels.map((label) => doesLabelExist(context, label, REPO_CORE))
+  );
+  const labels = foundLabels.filter((_, i) => existence[i]);
 
   if (labels.length === 0) {
     return;
   }
 
-  log.info(
-    `Setting labels on issue #${context.payload.issue.number}: ${labels}.`
-  );
+  log.info(`Setting labels on issue #${issue.number}: ${labels}.`);
   await context.github.issues.addLabels(context.issue({ labels }));
 };

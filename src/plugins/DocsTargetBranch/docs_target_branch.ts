@@ -67,6 +67,7 @@ const correctTargetBranchDetected = async (context: PRContext) => {
   const pr = getIssueFromPayload(context);
   const author = context.payload.sender.login;
   const promises: Promise<unknown>[] = [];
+
   // Typing is wrong for PRs, so use labels type from issues
   const currentLabels = (pr.labels as WebhookPayloadIssuesIssue["labels"]).map(
     (label) => label.name
@@ -96,6 +97,8 @@ const correctTargetBranchDetected = async (context: PRContext) => {
       )
     );
   }
+
+  await Promise.all(promises);
 };
 
 const wrongTargetBranchDetected = async (

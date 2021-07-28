@@ -3,6 +3,7 @@ import { REPO_HOME_ASSISTANT_IO } from "../../const";
 import { IssueContext } from "../../types";
 import { filterEventNoBot } from "../../util/filter_event_no_bot";
 import { filterEventByRepo } from "../../util/filter_event_repo";
+import { doesLabelExist } from "../../util/label";
 import { extractDocumentationSectionsLinks } from "../../util/text_parser";
 
 export const NAME = "SetDocumentationSection";
@@ -24,39 +25,24 @@ export const initSetDocumentationSection = (app: Application) => {
 export const runSetDocumentationSection = async (context: IssueContext) => {
   const log = context.log.child({ plugin: NAME });
 
-  const foundSections = extractDocumentationSectionsLinks(
-    context.payload.issue.body
-  );
+  const issue = context.payload.issue;
+  const foundSections = extractDocumentationSectionsLinks(issue.body);
 
-  if (foundSections.includes("integration")) {
+  if (foundSections.includes("integrations")) {
     // Don't do anything for integration sections
     return;
   }
 
-  log.debug(
-    `Trying labels ${foundSections} for issue #${context.payload.issue.number}.`
+  log.debug(`Trying labels ${foundSections} for issue #${issue.number}.`);
+  const existence = await Promise.all(
+    foundSections.map((label) => doesLabelExist(context, label))
   );
-  let labels = (await Promise.all(
-    foundSections.map(async (section) => {
-      try {
-        const exist = await context.github.issues.getLabel(
-          context.issue({ name: section })
-        );
-        if (exist.data.name === section) {
-          return section;
-        }
-      } catch (err) {
-        context.log.error({ plugin: NAME, err });
-      }
-    })
-  )).filter(Boolean);
+  const labels = foundSections.filter((_, i) => existence[i]);
 
   if (labels.length === 0) {
     return;
   }
 
-  log.info(
-    `Setting labels on issue #${context.payload.issue.number}: ${labels}.`
-  );
+  log.info(`Setting labels on issue #${issue.number}: ${labels}.`);
   await context.github.issues.addLabels(context.issue({ labels }));
 };

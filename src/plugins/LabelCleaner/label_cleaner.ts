@@ -26,10 +26,10 @@ export const initLabelCleaner = (app: Application) => {
 
 export const runLabelCleaner = async (context: PRContext) => {
   const repo = extractRepoFromContext(context);
-
   if (!(repo in TO_CLEAN)) {
     return;
   }
+
   const pr = getIssueFromPayload(context);
 
   // Typing is wrong for PRs, so use labels type from issues

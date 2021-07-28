@@ -13,7 +13,6 @@ export const initIssueLinks = (app: Application) => {
 
 export const runIssueLinks = async (context: LabeledIssueOrPRContext) => {
   const labelName = context.payload.label.name;
-
   if (labelName.indexOf("integration: ") === -1) {
     return;
   }

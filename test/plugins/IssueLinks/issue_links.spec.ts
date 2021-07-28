@@ -14,7 +14,9 @@ describe("IssueLinks", () => {
         // @ts-ignore
         label: { name: "integration: awesome" },
         // @ts-ignore
-        issue: { url: "https://api.github.com/repos/home-assistant/core/issues/1234" }
+        issue: { url: "https://api.github.com/repos/home-assistant/core/issues/1234" },
+        // @ts-ignore
+        repository: { name: "core" }
       },
       // @ts-ignore
       issue: (val) => val,

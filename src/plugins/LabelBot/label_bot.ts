@@ -6,7 +6,6 @@ import { filterEventByRepo } from "../../util/filter_event_repo";
 import { ParsedPath } from "../../util/parse_path";
 import { fetchPullRequestFilesFromContext } from "../../util/pull_request";
 
-// Convert a list of file paths to labels to set
 import componentAndPlatform from "./strategies/componentAndPlatform";
 import hasTests from "./strategies/hasTests";
 import markCore from "./strategies/markCore";
@@ -63,7 +62,6 @@ export const runLabelBot = async (context: PRContext) => {
   }
 
   const labels = Array.from(labelSet);
-
   if (labels.length === 0) return;
 
   if (labels.length > 9) {

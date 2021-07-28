@@ -11,10 +11,9 @@ import { fetchPullRequestFilesFromContext } from "../../util/pull_request";
 const NAME = "ReviewEnforcer";
 
 const USERS = [];
-
 const INTEGRATIONS = ["xiaomi_miio"];
 
-const commentBody = `This pull request needs to be manually signed off by @home-assistant/core before it can get merged.`;
+const commentBody = `This pull request needs to be manually signed off on by @home-assistant/core before it can get merged.`;
 
 export const initReviewEnforcer = (app: Application) => {
   app.on("pull_request.opened", filterEventNoBot(NAME, runReviewEnforcer));
@@ -62,5 +61,5 @@ const checkPythonPRFiles = async (context: PRContext) => {
 };
 
 const markForReview = async (context: PRContext) => {
-  await scheduleComment(context, "ReviewEnforcer", commentBody);
+  await scheduleComment(context, NAME, commentBody);
 };

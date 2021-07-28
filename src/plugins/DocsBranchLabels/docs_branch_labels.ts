@@ -49,7 +49,7 @@ export const runDocsBranchLabels = async (context: PRContext) => {
       )
     );
 
-  if (tasks.length) {
+  if (tasks.length > 0) {
     await Promise.all(tasks);
   }
 };

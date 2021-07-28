@@ -19,6 +19,7 @@ describe(NAME, () => {
       },
     },
     issue: (val) => val,
+    repo: (val) => val,
     github: {
       issues: {
         async addLabels(labels) {

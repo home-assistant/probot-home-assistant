@@ -29,18 +29,19 @@ export const runCodeOwnersMention = async (
     return;
   }
 
-  const labelName = context.payload.label.name;
   const triggerIssue = getIssueFromPayload(context);
 
+  const labelName = context.payload.label.name;
   if (labelName.indexOf("integration: ") === -1) {
     return;
   }
 
+  const integrationName = labelName.split("integration: ")[1];
+
+  log.debug(`Loading CODEOWNERS from ${repository} for ${integrationName}.`);
   const codeownersData = await context.github.repos.getContents(
     context.repo({ path: "CODEOWNERS" })
   );
-
-  const integrationName = labelName.split("integration: ")[1];
 
   const path =
     repository === REPO_CORE
@@ -66,11 +67,6 @@ export const runCodeOwnersMention = async (
     return;
   }
 
-  const owners = match.owners.map(
-    // Remove the `@`
-    (usr) => usr.substring(1).toLowerCase()
-  );
-
   // Because of our patched parse(), TS doesn't know about the match property.
   // @ts-ignore
   const codeownersLine = `${codeownersData.data.html_url}#L${match.line}`;
@@ -87,15 +83,21 @@ export const runCodeOwnersMention = async (
     commenter.user.login.toLowerCase()
   );
 
+  const promises: Promise<unknown>[] = [];
+
+  // Remove the `@` from all owners
+  const owners = match.owners.map((usr) => usr.substring(1).toLowerCase());
   const payloadUsername = triggerIssue.user.login.toLowerCase();
   const ownersMinusAuthor = owners.filter((usr) => usr !== payloadUsername);
 
-  log.info(`Assigning to ${formatContext(context)}: ${ownersMinusAuthor}`);
-  const promises: Promise<unknown>[] = [
-    context.github.issues.addAssignees(
-      context.issue({ assignees: ownersMinusAuthor })
-    ),
-  ];
+  if (ownersMinusAuthor.length > 0) {
+    log.info(`Assigning to ${formatContext(context)}: ${ownersMinusAuthor}`);
+    promises.push(
+      context.github.issues.addAssignees(
+        context.issue({ assignees: ownersMinusAuthor })
+      )
+    );
+  }
 
   const mentions = ownersMinusAuthor
     .filter((usr) => !assignees.includes(usr) && !commenters.includes(usr))
@@ -114,14 +116,12 @@ export const runCodeOwnersMention = async (
     )}, mind taking a look at this ${triggerLabel} as it has been labeled with an integration (\`${integrationName}\`) you are listed as a [code owner](${codeownersLine}) for? Thanks!`;
 
     log.info(`Adding comment to ${formatContext(context)}: ${commentBody}`);
-
-    promises.push(scheduleComment(context, "CodeOwnersMention", commentBody));
+    promises.push(scheduleComment(context, NAME, commentBody));
   }
 
   // Add a label if author of issue/PR is a code owner
   if (owners.includes(payloadUsername)) {
     log.info(`Adding by-code-owner label to ${formatContext(context)}.`);
-
     promises.push(
       context.github.issues.addLabels(
         context.issue({ labels: ["by-code-owner"] })
