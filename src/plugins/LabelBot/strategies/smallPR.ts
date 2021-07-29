@@ -3,7 +3,11 @@ import { ParsedPath } from "../../../util/parse_path";
 
 const SMALL_PR_THRESHOLD = 30;
 
-export default function(context: PRContext, parsed: ParsedPath[]) {
+export default function(
+  context: PRContext,
+  parsed: ParsedPath[],
+  labels: Set<string>
+) {
   const total = parsed.reduce(
     (tot, file) =>
       file.type === "test" || file.type === null ? tot : tot + file.additions,

@@ -16,9 +16,15 @@ import smallPR from "./strategies/smallPR";
 import typeOfChange from "./strategies/typeOfChange";
 import warnOnMergeToRelease from "./strategies/warnOnMergeToRelease";
 
+type Strategy = (
+  ctx: PRContext,
+  files: ParsedPath[],
+  labels: Set<string>
+) => string[];
+
 const NAME = "LabelBot";
 
-const STRATEGIES = [
+const STRATEGIES: Strategy[] = [
   newIntegrationOrPlatform,
   removePlatform,
   warnOnMergeToRelease,
@@ -79,7 +85,7 @@ export const runLabelBot = async (context: PRContext) => {
   log.debug(`Current labels of PR #${pr.number}: ${currentLabels}.`);
   log.debug(`Current managed labels of PR #${pr.number}: ${currentManaged}.`);
 
-  let strategies = [];
+  const strategies: Strategy[] = [];
   if (pr.base.ref !== "dev") {
     // when not merging to dev branch, only use merging-to-* tags.
     strategies.push(warnOnMergeToRelease);
@@ -91,7 +97,7 @@ export const runLabelBot = async (context: PRContext) => {
   const parsed = files.map((file) => new ParsedPath(file));
   const labelSet = new Set<string>();
   for (let strategy of strategies) {
-    for (let label of strategy(context, parsed)) {
+    for (let label of strategy(context, parsed, labelSet)) {
       labelSet.add(label);
     }
   }

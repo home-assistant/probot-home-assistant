@@ -32,7 +32,11 @@ const BODYMATCHES = [
   },
 ];
 
-export default function(context: PRContext, parsed: ParsedPath[]) {
+export default function(
+  context: PRContext,
+  parsed: ParsedPath[],
+  current: Set<string>
+) {
   const completedTasks = extractTasks(context.payload.pull_request.body || "")
     .filter((task) => {
       return task.checked;

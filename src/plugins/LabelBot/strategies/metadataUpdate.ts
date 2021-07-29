@@ -11,7 +11,11 @@ const METADATA_FILES = [
   "services.yaml",
 ];
 
-export default function(context: PRContext, parsed: ParsedPath[]) {
+export default function(
+  context: PRContext,
+  parsed: ParsedPath[],
+  labels: Set<string>
+) {
   return parsed.every((fil) => METADATA_FILES.includes(fil.filename))
     ? ["metadata-only"]
     : [];
