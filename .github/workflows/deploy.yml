@@ -28,16 +28,15 @@ jobs:
       - name: Add certificate
         run: echo "${{ secrets.BOT_CERTIFICATE }}" > ./github-app-probot-home-assistant-key.pem
 
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Upload
         run: yarn run deploy
         env:
           APP_ID: ${{ secrets.APP_ID }}
           APP_WEBHOOK_SECRET: ${{ secrets.APP_WEBHOOK_SECRET }}
-
