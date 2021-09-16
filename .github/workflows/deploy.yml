@@ -6,7 +6,7 @@ on:
       - master
 
 env:
-  NODE_VERSION: "14"
+  NODE_VERSION: "13"
 
 jobs:
   deploy:
