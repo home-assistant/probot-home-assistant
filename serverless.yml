@@ -1,7 +1,5 @@
 service: probot-home-assistant
 
-custom: ${file(config.yml)}
-
 provider:
   name: aws
   region: us-east-1
@@ -18,5 +16,5 @@ functions:
     events:
       - http: POST github_probot_webhook
     environment:
-      APP_ID: ${self:custom.${self:provider.stage}.github_app_id}
-      WEBHOOK_SECRET: ${self:custom.${self:provider.stage}.github_app_webhook_secret}
+      APP_ID: ${env:APP_ID}
+      WEBHOOK_SECRET: ${env:APP_WEBHOOK_SECRET}

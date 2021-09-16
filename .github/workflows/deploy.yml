@@ -1,0 +1,42 @@
+name: Deploy new code
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  NODE_VERSION: "14"
+
+jobs:
+  deploy:
+    name: Deploy code
+    runs-on: ubuntu-latest
+    environment: deploy
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ env.node-NODE_VERSION }}
+        uses: actions/setup-node@v2.4.0
+        with:
+          node-version: ${{ env.node-NODE_VERSION }}
+
+      - name: Install dependencies
+        run: yarn install  --immutable
+
+      - name: Add certificate
+        run: echo "${{ secrets.BOT_CERTIFICATE }}" > ./github-app-probot-home-assistant-key.pem
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Upload
+        run: yarn run deploy
+        env:
+          APP_ID: ${{ secrets.APP_ID }}
+          APP_WEBHOOK_SECRET: ${{ secrets.APP_WEBHOOK_SECRET }}
