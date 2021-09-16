@@ -38,6 +38,6 @@ jobs:
       - name: Upload
         run: yarn run deploy
         env:
-          APP_ID: ${{ secrets.AWS_REGION }}
+          APP_ID: ${{ secrets.APP_ID }}
           APP_WEBHOOK_SECRET: ${{ secrets.APP_WEBHOOK_SECRET }}
 
