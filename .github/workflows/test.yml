@@ -32,7 +32,7 @@ jobs:
         run: yarn build
 
       - name: Test package
-        run: sls package
+        run: ./node_modules/.bin/sls package
         env:
           APP_ID: 1
           WEBHOOK_SECRET: ""
