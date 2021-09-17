@@ -2,7 +2,11 @@ name: "Test"
 
 on:
   pull_request:
-    branches: [master]
+    branches:
+      - master
+
+env:
+  NODE_VERSION: "14"
 
 jobs:
   test:
@@ -10,10 +14,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js
-        uses: actions/setup-node@v1
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v2.4.0
         with:
-          node-version: "12.x"
-      - run: yarn install --frozen-lockfile
-      - run: yarn test
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Run tests
+        run: yarn test
+
+      - name: Test build
+        run: yarn build
+
+      - name: Test package
+        run: sls package
+        env:
+          APP_ID: 1
+          WEBHOOK_SECRET: ""

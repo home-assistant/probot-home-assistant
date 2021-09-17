@@ -21,15 +21,16 @@
     "husky": "^3.0.1",
     "lint-staged": "^9.2.0",
     "mocha": "^6.2.0",
-    "prettier": "^1.18.2",
-    "serverless": "^1.48.0",
+    "prettier": "^2.3.2",
+    "serverless": "^2.52.1",
+    "sinon": "^9.0.3",
     "ts-mocha": "^6.0.0",
-    "typescript": "^3.5.3",
-    "sinon": "^9.0.3"
+    "typescript": "^4.3.5",
+    "serverless-offline": "^8.2.0"
   },
   "dependencies": {
     "@probot/serverless-lambda": "^0.3.0",
-    "codeowners-utils": "^1.0.0",
+    "codeowners-utils": "^1.0.2",
     "ignore": "^5.1.2",
     "probot": "^9.2.19"
   },
