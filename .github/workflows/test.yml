@@ -34,5 +34,5 @@ jobs:
       - name: Test package
         run: ./node_modules/.bin/sls package
         env:
-          APP_ID: 1
-          WEBHOOK_SECRET: ""
+          APP_ID: "1"
+          WEBHOOK_SECRET: "1"
