@@ -6,7 +6,7 @@ on:
       - master
 
 env:
-  NODE_VERSION: "13"
+  NODE_VERSION: "14"
 
 jobs:
   deploy:
@@ -23,7 +23,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Install dependencies
-        run: yarn install  --immutable
+        run: yarn install --immutable
 
       - name: Add certificate
         run: echo "${{ secrets.BOT_CERTIFICATE }}" > ./github-app-probot-home-assistant-key.pem

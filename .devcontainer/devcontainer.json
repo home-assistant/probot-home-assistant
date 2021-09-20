@@ -1,8 +1,12 @@
 // See https://aka.ms/vscode-remote/devcontainer.json for format details.
 {
   "name": "Probot Home Assistant",
+  "image": "mcr.microsoft.com/vscode/devcontainers/typescript-node:14",
   "context": "..",
-  "dockerFile": "Dockerfile",
+  "remoteEnv": {
+    "PATH":"${containerEnv:PATH}:./node_modules/.bin",
+    "DEVCONTAINER": "true"
+  },
   "postCreateCommand": "yarn install",
   "extensions": [
     "github.vscode-pull-request-github",

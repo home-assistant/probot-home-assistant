@@ -5,16 +5,24 @@ provider:
   region: us-east-1
   timeout: 10
   memorySize: 192
+  lambdaHashingVersion: 20201221
   stage: ${opt:stage, 'dev'}
-  runtime: nodejs12.x
+  runtime: nodejs14.x
+
+package:
+  patterns:
+    - "!*"
+    - "!*/**"
+    - "dist/**"
+    - "github-app-probot-home-assistant-key.pem"
 
 functions:
   handleProbot:
-    handler: dist/serverless_handler.probot
-    exclude:
-      - .devcontainer/**
+    handler: ./dist/serverless_handler.probot
     events:
-      - http: POST github_probot_webhook
+      - http:
+          path: github_probot_webhook
+          method: post
     environment:
       APP_ID: ${env:APP_ID}
       WEBHOOK_SECRET: ${env:APP_WEBHOOK_SECRET}
