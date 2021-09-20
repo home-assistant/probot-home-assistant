@@ -9,13 +9,6 @@ provider:
   stage: ${opt:stage, 'dev'}
   runtime: nodejs14.x
 
-package:
-  patterns:
-    - "!*"
-    - "!*/**"
-    - "dist/**"
-    - "github-app-probot-home-assistant-key.pem"
-
 functions:
   handleProbot:
     handler: ./dist/serverless_handler.probot
