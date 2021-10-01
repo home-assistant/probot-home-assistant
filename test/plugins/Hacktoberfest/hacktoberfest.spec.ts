@@ -51,7 +51,7 @@ describe("Hacktoberfest", () => {
         labels: ["Hacktoberfest"],
       });
     });
-    it("Remove hacktoberfest label and add invalid label on closed PR", async () => {
+    it("Remove hacktoberfest label on closed PR", async () => {
       let setLabels: any;
       let removeLabel: any;
       await runHacktoberfestClosedPR({
@@ -74,18 +74,11 @@ describe("Hacktoberfest", () => {
         github: {
           issues: {
             // @ts-ignore
-            async addLabels(labels) {
-              setLabels = labels;
-            },
-            // @ts-ignore
             async removeLabel(label) {
               removeLabel = label;
             },
           },
         },
-      });
-      assert.deepEqual(setLabels, {
-        labels: ["invalid"],
       });
       assert(removeLabel, "Hacktoberfest");
     });
