@@ -1,11 +1,12 @@
 const codeownersUtils = require("codeowners-utils");
-import { LabeledIssueOrPRContext } from "../../types";
+import { WebhookPayloadIssuesIssue } from "@octokit/webhooks";
 import { Application } from "probot";
 import { REPO_CORE, REPO_HOME_ASSISTANT_IO } from "../../const";
+import { LabeledIssueOrPRContext } from "../../types";
+import { scheduleComment } from "../../util/comment";
 import { extractRepoFromContext } from "../../util/filter_event_repo";
 import { getIssueFromPayload } from "../../util/issue";
-import { scheduleComment } from "../../util/comment";
-import { WebhookPayloadIssuesIssue } from "@octokit/webhooks";
+import { promiseWrapper } from "../../util/promiseWrapper";
 
 const NAME = "CodeOwnersMention";
 const activeRepositories = [REPO_CORE, REPO_HOME_ASSISTANT_IO];
@@ -68,9 +69,9 @@ export const runCodeOwnersMention = async (
   const codeownersLine = `${codeownersData.data.html_url}#L${match.line}`;
 
   // The type for the PR payload is wrong for assignees. Cast it to issue. type is the same.
-  const assignees = (triggerIssue.assignees as WebhookPayloadIssuesIssue["assignees"]).map(
-    (assignee) => assignee.login.toLowerCase()
-  );
+  const assignees = (
+    triggerIssue.assignees as WebhookPayloadIssuesIssue["assignees"]
+  ).map((assignee) => assignee.login.toLowerCase());
 
   const commentersData = await context.github.issues.listComments(
     context.issue({ per_page: 100 })
@@ -121,7 +122,9 @@ export const runCodeOwnersMention = async (
     );
   }
 
-  await Promise.all(promises);
+  await Promise.all(
+    promises.map((promise) => promiseWrapper(context.log, promise))
+  );
 };
 
 // Temporary local patched version of what's in codeowners-utils
