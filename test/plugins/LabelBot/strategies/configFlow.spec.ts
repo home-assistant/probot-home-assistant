@@ -26,7 +26,7 @@ describe("configFlow", () => {
     assert.deepEqual(
       getOutput(
         [
-          "tests/components/http/__init__.py",
+          "homeassistant/components/http/__init__.py",
           "homeassistant/components/http/config_flow.py",
         ],
         "added"
