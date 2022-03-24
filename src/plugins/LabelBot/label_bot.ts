@@ -11,6 +11,7 @@ import markCore from "./strategies/markCore";
 import smallPR from "./strategies/smallPR";
 import hasTests from "./strategies/hasTests";
 import typeOfChange from "./strategies/typeOfChange";
+import configFlow from "./strategies/configFlow";
 import { PRContext } from "../../types";
 import { Application } from "probot";
 import { filterEventByRepo } from "../../util/filter_event_repo";
@@ -27,6 +28,7 @@ const STRATEGIES = [
   smallPR,
   hasTests,
   typeOfChange,
+  configFlow,
 ];
 
 export const initLabelBot = (app: Application) => {
