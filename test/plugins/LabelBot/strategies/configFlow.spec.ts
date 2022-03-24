@@ -8,11 +8,11 @@ function getOutput(files, status) {
   var output = configFlow(
     null,
     files.map(
-      (file) =>
+      (filename) =>
         new ParsedPath(
           // @ts-ignore
           {
-            filename: "homeassistant/components/" + file,
+            filename,
             status,
           }
         )
@@ -24,14 +24,20 @@ function getOutput(files, status) {
 describe("configFlow", () => {
   it("add new integration", () => {
     assert.deepEqual(
-      getOutput(["http/__init__.py", "http/config_flow.py"], "added"),
+      getOutput(
+        [
+          "tests/components/http/__init__.py",
+          "homeassistant/components/http/config_flow.py",
+        ],
+        "added"
+      ),
       null
     );
   });
 
   it("add config flow to existing integration", () => {
     assert.deepEqual(
-      getOutput(["mqtt/config_flow.py"], "added"),
+      getOutput(["homeassistant/components/mqtt/config_flow.py"], "added"),
       "config-flow"
     );
   });

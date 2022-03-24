@@ -15,7 +15,7 @@ export default function (context: PRContext, parsed: ParsedPath[]) {
   // remove new integrations
   for (const fil of parsed) {
     if (
-      fil.type == "component" &&
+      fil.type == "test" &&
       fil.status == "added" &&
       fil.filename === "__init__.py"
     ) {
