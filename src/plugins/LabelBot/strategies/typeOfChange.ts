@@ -22,6 +22,11 @@ const BODYMATCHES = [
   },
   {
     description:
+      "Deprecation (breaking change to happen in the future)",
+    labels: ["deprecation"],
+  },
+  {
+    description:
       "Breaking change (fix/feature causing existing functionality to break)",
     labels: ["breaking-change"],
   },

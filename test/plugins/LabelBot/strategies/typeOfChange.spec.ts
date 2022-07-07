@@ -131,6 +131,39 @@ describe("LabelBotPlugin - typeOfChange", () => {
       labels: ["merging-to-master", "small-pr", "new-feature"],
     });
   });
+  it("Deprecation", async () => {
+    let setLabels: any;
+
+    await runLabelBot({
+      // @ts-ignore
+      log: () => undefined,
+      payload: {
+        // @ts-ignore
+        pull_request: {
+          // @ts-ignore
+          base: {
+            ref: "master",
+          },
+          body:
+            "\n- [x] Deprecation (breaking change to happen in the future)",
+        },
+      },
+      // @ts-ignore
+      issue: (val) => val,
+      github: {
+        issues: {
+          // @ts-ignore
+          async addLabels(labels) {
+            setLabels = labels;
+          },
+        },
+      },
+      _prFiles: [],
+    });
+    assert.deepEqual(setLabels, {
+      labels: ["merging-to-master", "small-pr", "deprecation"],
+    });
+  });
   it("Breaking change", async () => {
     let setLabels: any;
 
