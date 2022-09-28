@@ -1,3 +1,5 @@
+# App has been migrated to [service-hub](https://github.com/home-assistant/service-hub/)
+
 # Probot app to do Home Assistant things
 
 ## Installation
